@@ -1,0 +1,27 @@
+# Frontend Ignore
+tagore/node_modules/
+tagore/build/
+tagore/.env
+tagore/.DS_Store
+tagore/npm-debug.log*
+tagore/yarn-debug.log*
+tagore/yarn-error.log*
+
+# Backend Ignore
+tagore-backend/__pycache__/
+tagore-backend/*.py[cod]
+tagore-backend/*$py.class
+tagore-backend/venv/
+tagore-backend/.env
+tagore-backend/*.log
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Miscellaneous
+.env
+*.log
