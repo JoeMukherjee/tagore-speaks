@@ -7,10 +7,10 @@ const TypingIndicator: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setDots((prevDots) => {
-                if (prevDots.length >= 3) return ".";
+                if (prevDots.length >= 4) return ".";
                 return prevDots + ".";
             });
-        }, 500); // Change dot every 500ms
+        }, 250);
 
         return () => clearInterval(interval);
     }, []);

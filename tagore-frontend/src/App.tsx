@@ -10,7 +10,7 @@ function App() {
             <Header />
 
             {/* Main content area with padding to account for fixed header */}
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto pt-20">
                 <ChatContainer />
             </div>
         </div>

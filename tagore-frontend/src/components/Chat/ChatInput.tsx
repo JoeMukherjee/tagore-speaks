@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 
 interface ChatInputProps {
     onSendMessage: (message: string) => void;
+    onTyping?: () => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onTyping }) => {
     const [message, setMessage] = useState("");
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -30,16 +31,25 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
             handleSubmit(e as unknown as React.FormEvent);
         }
     };
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newMessage = e.target.value;
+        setMessage(newMessage);
+
+        // Call onTyping prop when user starts typing
+        if (newMessage.length > 0 && onTyping) {
+            onTyping();
+        }
+    };
 
     return (
-        <form onSubmit={handleSubmit} className="flex w-full p-2">
+        <form onSubmit={handleSubmit} className="flex w-full px-2">
             <textarea
                 ref={textareaRef}
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Message Tagore..."
-                className="flex-grow p-2 border-0 bg-transparent focus:outline-none resize-none overflow-y-auto"
+                className="flex-grow p-2 bg-transparent focus:outline-none resize-none overflow-y-auto"
                 autoFocus
             />
         </form>
