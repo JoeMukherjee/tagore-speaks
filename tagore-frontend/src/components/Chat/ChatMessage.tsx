@@ -3,7 +3,12 @@ import React from "react";
 import TypingIndicator from "./TypingIndicator";
 import { Message } from "../../types/chat";
 
-const ChatMessage: React.FC<Message> = ({ content, type, isLoading }) => {
+const ChatMessage: React.FC<Message> = ({
+    content,
+    type,
+    isLoading,
+    isStreaming,
+}) => {
     return (
         <div
             className={`max-w-[80%] min-w-[20%] ${
@@ -19,6 +24,9 @@ const ChatMessage: React.FC<Message> = ({ content, type, isLoading }) => {
             >
                 <p className="mb-0 w-full break-words whitespace-pre-wrap">
                     {isLoading ? <TypingIndicator /> : content}
+                    {isStreaming && content.length > 0 && (
+                        <TypingIndicator inline />
+                    )}
                 </p>
             </div>
         </div>

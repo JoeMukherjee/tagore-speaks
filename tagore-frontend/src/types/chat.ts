@@ -6,10 +6,11 @@ export interface Message {
     type: MessageType;
     timestamp: Date;
     isLoading?: boolean;
+    isStreaming?: boolean;
 }
 
 export interface ChatResponse {
     message: string;
-    isLoading?: boolean;
+    isLoading: boolean;
     conversationId?: string;
 }

@@ -49,7 +49,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onTyping }) => {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Message Tagore..."
-                className="flex-grow p-2 bg-transparent focus:outline-none resize-none overflow-y-auto"
+                className="flex-grow p-2 bg-transparent border-0 outline-none focus:outline-none ring-0 focus:ring-0 resize-none"
                 autoFocus
             />
         </form>

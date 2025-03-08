@@ -1,7 +1,6 @@
 // src/App.tsx
 import ChatContainer from "./components/Chat/ChatContainer";
 import Header from "./components/Header";
-import "./App.css";
 
 function App() {
     return (

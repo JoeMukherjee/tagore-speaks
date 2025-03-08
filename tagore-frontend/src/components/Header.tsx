@@ -8,10 +8,10 @@ const Header: React.FC = () => {
             <div className="flex items-center">
                 <img src={tagoreImage} alt="Tagore" className="h-20" />
                 <div className="ml-3 flex flex-col justify-start">
-                    <span className="text-2xl text-left font-bold leading-tight">
+                    <span className="text-2xl text-left font-heading font-bold leading-tight">
                         Tagore
                     </span>
-                    <span className="text-2xl text-left font-bold leading-tight">
+                    <span className="text-2xl text-left font-heading font-bold leading-tight">
                         Speaks
                     </span>
                 </div>

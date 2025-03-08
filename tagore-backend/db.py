@@ -95,10 +95,12 @@ def add_message(conversation_id, role, content):
     cursor = conn.cursor()
 
     try:
-
-        cursor.execute(
-            "INSERT OR IGNORE INTO conversations (id) VALUES (?)", (conversation_id,)
-        )
+        # Check if conversation exists
+        cursor.execute("SELECT id FROM conversations WHERE id = ?", (conversation_id,))
+        if not cursor.fetchone():
+            cursor.execute(
+                "INSERT INTO conversations (id) VALUES (?)", (conversation_id,)
+            )
 
         cursor.execute(
             "INSERT INTO messages (conversation_id, role, content) VALUES (?, ?, ?)",
@@ -107,7 +109,7 @@ def add_message(conversation_id, role, content):
 
         conn.commit()
     except sqlite3.Error as e:
-
+        print(f"Database error: {str(e)}")
         conn.rollback()
         raise e
     finally:

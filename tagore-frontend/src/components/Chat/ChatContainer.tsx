@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import { sendMessage } from "../../services/chatService";
+import { streamMessage } from "../../services/chatService";
 import { Message } from "../../types/chat";
 
 const ChatContainer: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
+    const [messageSpeed] = useState<number>(200);
     const [conversationId, setConversationId] = useState<string>();
     const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -20,64 +21,100 @@ const ChatContainer: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    // Remove markdown-like asterisks and trim start
+    useEffect(() => {
+        return () => {
+            const events = document.querySelectorAll("EventSource");
+
+            events.forEach((event: any) => {
+                if (event && typeof event.close === "function") {
+                    event.close();
+                }
+            });
+        };
+    }, []);
+
     const cleanMessageContent = (text: string) =>
         text.replace(/\*[^*]*\*/g, "").trimStart();
 
     const handleSendMessage = async (content: string) => {
-        // Add user message and loading indicator
         const userMessage: Message = {
             content,
             type: "user",
             timestamp: new Date(),
         };
-        const loadingMessage: Message = {
+
+        const systemMessage: Message = {
             content: "",
             type: "system",
             timestamp: new Date(),
-            isLoading: true,
+            isStreaming: true,
         };
-        setMessages((prev) => [...prev, userMessage, loadingMessage]);
+
+        setMessages((prev) => [...prev, userMessage, systemMessage]);
 
         try {
-            // Send message and update conversation
-            const responseMessage = await sendMessage(content, conversationId);
+            streamMessage(
+                content,
 
-            if (responseMessage.conversationId) {
-                setConversationId(responseMessage.conversationId);
-            }
+                (chunk, newConversationId) => {
+                    if (newConversationId && !conversationId) {
+                        setConversationId(newConversationId);
+                    }
 
-            setMessages((prev) =>
-                prev.map((msg, index) =>
-                    index === prev.length - 1 && msg.isLoading
-                        ? {
-                              content: cleanMessageContent(
-                                  responseMessage.message
-                              ),
-                              type: "system",
-                              timestamp: new Date(),
-                              isLoading: false,
-                          }
-                        : msg
-                )
+                    setMessages((prev) => {
+                        const newMessages = [...prev];
+                        const lastMessage = newMessages[newMessages.length - 1];
+
+                        if (lastMessage.isStreaming) {
+                            newMessages[newMessages.length - 1] = {
+                                ...lastMessage,
+                                content: cleanMessageContent(
+                                    lastMessage.content + chunk
+                                ),
+                            };
+                        }
+
+                        return newMessages;
+                    });
+                },
+
+                () => {
+                    setMessages((prev) => {
+                        const newMessages = [...prev];
+                        const lastMessage = newMessages[newMessages.length - 1];
+
+                        if (lastMessage.isStreaming) {
+                            newMessages[newMessages.length - 1] = {
+                                ...lastMessage,
+                                isStreaming: false,
+                            };
+                        }
+
+                        return newMessages;
+                    });
+                },
+                conversationId,
+                messageSpeed
             );
         } catch (error) {
             console.error("Error:", error);
 
-            // Update with error message
-            setMessages((prev) =>
-                prev.map((msg, index) =>
-                    index === prev.length - 1 && msg.isLoading
-                        ? {
-                              content:
-                                  "Sorry, there was an error processing your message.",
-                              type: "system",
-                              timestamp: new Date(),
-                              isLoading: false,
-                          }
-                        : msg
-                )
-            );
+            setMessages((prev) => {
+                const newMessages = [...prev];
+                const lastMessage = newMessages[newMessages.length - 1];
+
+                if (lastMessage.isStreaming) {
+                    newMessages[newMessages.length - 1] = {
+                        content:
+                            "Sorry, there was an error processing your message.",
+                        type: "system",
+                        timestamp: new Date(),
+                        isStreaming: false,
+                    };
+                }
+
+                return newMessages;
+            });
         }
     };
 

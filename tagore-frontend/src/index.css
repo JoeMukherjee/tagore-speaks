@@ -1,69 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* Box sizing reset */
+html {
+    box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+/* Keep your Tailwind directives at the top */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+/* Custom styles that extend Tailwind */
+@layer base {
+    /* Box sizing is already handled by Tailwind's preflight */
+    html {
+        font-family: "Rubik", system-ui, sans-serif;
+    }
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    body {
+        font-family: "Rubik", system-ui, sans-serif;
+    }
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
+    p {
+        font-family: "Rubik", system-ui, sans-serif;
+    }
 
-a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-}
-a:hover {
-    color: #535bf2;
-}
-
-body {
-    min-width: 100vw;
-    min-height: 100vh;
-}
-
-h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-button:hover {
-    border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Merriweather", Georgia, serif;
+    }
     :root {
-        color: #213547;
-        background-color: #ffffff;
+        /* Font settings are better handled in tailwind.config.js */
+        color-scheme: light dark;
+
+        /* These can stay as they're not easily replicated with Tailwind */
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
-    a:hover {
-        color: #747bff;
+
+    /* Animation that can't easily be done with Tailwind */
+    @keyframes logo-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
-    button {
-        background-color: #f9f9f9;
+}
+
+/* Only keep custom components that can't be easily replaced with Tailwind utilities */
+@layer components {
+    .logo {
+        @apply h-24 p-6 transition-all duration-300;
+        will-change: filter;
+    }
+
+    .logo:hover {
+        @apply filter drop-shadow-lg;
+    }
+
+    .logo.react:hover {
+        filter: drop-shadow(0 0 2em #61dafbaa);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        a:nth-of-type(2) .logo {
+            animation: logo-spin infinite 20s linear;
+        }
     }
 }
