@@ -14,3 +14,8 @@ export interface ChatResponse {
     isLoading: boolean;
     conversationId?: string;
 }
+
+export interface ChatInputProps {
+    onSendMessage: (message: string) => void;
+    onTyping?: () => void;
+}

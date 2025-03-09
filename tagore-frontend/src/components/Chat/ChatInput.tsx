@@ -1,10 +1,6 @@
 // src/components/Chat/ChatInput.tsx
 import React, { useState, useEffect } from "react";
-
-interface ChatInputProps {
-    onSendMessage: (message: string) => void;
-    onTyping?: () => void;
-}
+import { ChatInputProps } from "../../types/chat";
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onTyping }) => {
     const [message, setMessage] = useState("");

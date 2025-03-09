@@ -1,7 +1,6 @@
 import axios from "axios";
 import { ChatResponse } from "../types/chat";
 
-// src/services/chatService.ts
 export async function sendMessage(
     content: string,
     conversationId?: string
@@ -34,7 +33,7 @@ export const streamMessage = async (
     onChunk: (chunk: string, conversationId?: string) => void,
     onComplete: () => void,
     conversationId?: string,
-    throttleRate: number = 50 // Default to 50ms between chunks
+    throttleRate: number = 200
 ): Promise<void> => {
     try {
         // First send the POST request to initiate streaming
