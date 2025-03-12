@@ -4,8 +4,12 @@ import TypingIndicator from "./TypingIndicator";
 import AnimatedText from "./AnimatedText";
 import { Message } from "../../types/chat";
 
-// Replace the component implementation with this:
-const ChatMessage: React.FC<Message> = ({ content, type, isLoading }) => {
+const ChatMessage: React.FC<
+    Message & {
+        systemIsTyping?: boolean;
+        setSystemIsTyping?: (isTyping: boolean) => void;
+    }
+> = ({ content, type, isLoading, systemIsTyping, setSystemIsTyping }) => {
     return (
         <div
             className={`max-w-[80%] min-w-[20%] chat-message ${
@@ -25,7 +29,12 @@ const ChatMessage: React.FC<Message> = ({ content, type, isLoading }) => {
                     {isLoading ? (
                         <TypingIndicator />
                     ) : type === "system" ? (
-                        <AnimatedText content={content} isAnimating={true} />
+                        <AnimatedText
+                            content={content}
+                            isAnimating={true}
+                            systemIsTyping={systemIsTyping}
+                            setSystemIsTyping={setSystemIsTyping}
+                        />
                     ) : (
                         <p className="whitespace-pre-wrap">{content}</p>
                     )}

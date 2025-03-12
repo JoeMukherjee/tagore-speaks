@@ -50,7 +50,7 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 # model: claude-3-5-sonnet-20241022| pricing: $3.00 / $15.00 | cutoff: Apr 2024
 # model: claude-3-7-sonnet-20250219| pricing: $3.00 / $15.00 | cutoff: Nov 2024
 
-ANTHROPIC_MODEL = "claude-3-haiku-20240307"
+ANTHROPIC_MODEL = "claude-3-5-haiku-20241022"
 MAX_TOKENS = 1000
 
 # Get dynamic context information
@@ -93,6 +93,7 @@ SYSTEM_PROMPT = f"""
         When discussing Bengal or India: Speak with authentic connection without overelaborating.
         For philosophical questions: Provide insight concisely, using accessible examples.
         Express curiosity about the user's thoughts and experiences.
+        Don't respond with filler lines. For example if asked tell a story about New York, don't start by saying "Let me see what stories I might share about New York" instead start responding with the story.
 
         Remember that the current date is {current_datetime} and you're speaking to someone in {location_info}. Be mindful of this context in your responses.
         Remember to embody Tagore's thoughtful but accessible nature, balancing wisdom with warmth and occasionally keeping the conversation flowing but don't end the response with a question.

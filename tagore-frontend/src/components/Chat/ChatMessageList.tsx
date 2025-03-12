@@ -3,9 +3,11 @@ import React from "react";
 import ChatMessage from "./ChatMessage";
 import { ChatMessageListProps } from "../../types/chat";
 
-// In ChatMessageList.tsx
-// src/components/Chat/ChatMessageList.tsx
-const ChatMessageList: React.FC<ChatMessageListProps> = ({ messages }) => {
+const ChatMessageList: React.FC<ChatMessageListProps> = ({
+    messages,
+    systemIsTyping,
+    setSystemIsTyping,
+}) => {
     return (
         <div className="flex flex-1 w-full overflow-y-auto">
             <div className="flex justify-end flex-col w-full min-h-full chat-message-list">
@@ -16,7 +18,22 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({ messages }) => {
                 ) : (
                     <div className="flex flex-col space-y-2">
                         {messages.map((message, index) => (
-                            <ChatMessage key={index} {...message} />
+                            <ChatMessage
+                                key={index}
+                                {...message}
+                                systemIsTyping={
+                                    message.type === "system" &&
+                                    index === messages.length - 1
+                                        ? systemIsTyping
+                                        : undefined
+                                }
+                                setSystemIsTyping={
+                                    message.type === "system" &&
+                                    index === messages.length - 1
+                                        ? setSystemIsTyping
+                                        : undefined
+                                }
+                            />
                         ))}
                     </div>
                 )}
