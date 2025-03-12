@@ -1,17 +1,14 @@
-// src/components/Chat/ChatMessage.tsx
+// Change the import section
 import React from "react";
 import TypingIndicator from "./TypingIndicator";
+import AnimatedText from "./AnimatedText";
 import { Message } from "../../types/chat";
 
-const ChatMessage: React.FC<Message> = ({
-    content,
-    type,
-    isLoading,
-    isStreaming,
-}) => {
+// Replace the component implementation with this:
+const ChatMessage: React.FC<Message> = ({ content, type, isLoading }) => {
     return (
         <div
-            className={`max-w-[80%] min-w-[20%] ${
+            className={`max-w-[80%] min-w-[20%] chat-message ${
                 type === "user" ? "self-start" : "self-end ml-auto"
             }`}
         >
@@ -19,15 +16,20 @@ const ChatMessage: React.FC<Message> = ({
                 className={`flex p-3 ${
                     type === "user"
                         ? " text-left rounded-2xl bg-gray-100 text-gray-800"
+                        : isLoading
+                        ? " text-right bg-transparent text-black"
                         : " text-left bg-transparent text-black"
                 }`}
             >
-                <p className="mb-0 w-full break-words whitespace-pre-wrap">
-                    {isLoading ? <TypingIndicator /> : content}
-                    {isStreaming && content.length > 0 && (
-                        <TypingIndicator inline />
+                <div className="mb-0 w-full break-words">
+                    {isLoading ? (
+                        <TypingIndicator />
+                    ) : type === "system" ? (
+                        <AnimatedText content={content} isAnimating={true} />
+                    ) : (
+                        <p className="whitespace-pre-wrap">{content}</p>
                     )}
-                </p>
+                </div>
             </div>
         </div>
     );

@@ -6,7 +6,6 @@ export interface Message {
     type: MessageType;
     timestamp: Date;
     isLoading?: boolean;
-    isStreaming?: boolean;
 }
 
 export interface ChatResponse {
@@ -18,4 +17,15 @@ export interface ChatResponse {
 export interface ChatInputProps {
     onSendMessage: (message: string) => void;
     onTyping?: () => void;
+}
+
+export interface ChatMessageListProps {
+    messages: Message[];
+}
+
+export interface AnimatedTextProps {
+    content: string;
+    isAnimating: boolean;
+    minDelay?: number;
+    maxDelay?: number;
 }

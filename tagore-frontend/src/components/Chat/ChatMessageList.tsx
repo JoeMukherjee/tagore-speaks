@@ -1,16 +1,14 @@
 // src/components/Chat/ChatMessageList.tsx
 import React from "react";
 import ChatMessage from "./ChatMessage";
-import { Message } from "../../types/chat";
+import { ChatMessageListProps } from "../../types/chat";
 
-interface ChatMessageListProps {
-    messages: Message[];
-}
-
+// In ChatMessageList.tsx
+// src/components/Chat/ChatMessageList.tsx
 const ChatMessageList: React.FC<ChatMessageListProps> = ({ messages }) => {
     return (
         <div className="flex flex-1 w-full overflow-y-auto">
-            <div className="flex justify-end flex-col w-full min-h-full">
+            <div className="flex justify-end flex-col w-full min-h-full chat-message-list">
                 {messages.length === 0 ? (
                     <div className="w-full text-center text-gray-500">
                         Start a conversation by typing a message below.

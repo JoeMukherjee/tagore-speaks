@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 /* Box sizing reset */
 html {
@@ -37,7 +38,7 @@ html {
     h4,
     h5,
     h6 {
-        font-family: "Merriweather", Georgia, serif;
+        font-family: "Caudex", Georgia, serif;
     }
     :root {
         /* Font settings are better handled in tailwind.config.js */
@@ -80,5 +81,84 @@ html {
         a:nth-of-type(2) .logo {
             animation: logo-spin infinite 20s linear;
         }
+    }
+}
+
+@media print {
+    /* Reset all heights and minimum heights for printing */
+    .min-h-full,
+    [class*="min-h-"],
+    [class*="h-screen"] {
+        min-height: auto !important;
+        height: auto !important;
+    }
+
+    /* Hide everything first */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Then make only what we want visible */
+    header,
+    header *,
+    .chat-message-list,
+    .chat-message-list * {
+        visibility: visible !important;
+    }
+
+    /* Fix layout for print */
+    body,
+    html {
+        margin: 0;
+        padding: 0;
+        height: auto;
+        overflow: visible;
+    }
+
+    /* Force header to top of first page */
+    header {
+        position: static !important;
+        padding: 20px 0;
+        margin-bottom: 20px;
+    }
+
+    /* Fix chat container to avoid page breaks between header and content */
+    .flex-col.w-\[70\%\] {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Ensure chat message list displays properly */
+    .chat-message-list {
+        display: block !important;
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+        margin-top: 10px;
+    }
+
+    /* Hide the input box and export button when printing */
+    .bg-gray-100.rounded-lg.flex.py-2 {
+        display: none !important;
+    }
+
+    /* Ensure backgrounds and colors print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* Remove browser headers/footers */
+    @page {
+        margin: 1cm;
+        size: auto;
+    }
+
+    /* Prevent messages from breaking across pages */
+    .chat-message {
+        page-break-inside: avoid;
     }
 }

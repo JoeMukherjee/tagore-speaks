@@ -18,8 +18,8 @@ tagore-backend/.env
 tagore-backend/*.log
 
 # Database Ignore
-tagore-conv-db/
-tagore-conv-db/*
+tagore-data/
+tagore-data/*
 
 # IDE and Editor files
 .vscode/

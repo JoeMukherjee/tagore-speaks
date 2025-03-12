@@ -6,9 +6,9 @@ export default {
             fontFamily: {
                 sans: ["Rubik", "system-ui", "sans-serif"],
                 // Heading font
-                serif: ["Merriweather", "Georgia", "serif"],
+                serif: ["Caudex", "Georgia", "serif"],
                 // Named variants for semantic usage
-                heading: ["Merriweather", "Georgia", "serif"],
+                heading: ["Caudex", "Georgia", "serif"],
                 body: ["Rubik", "system-ui", "sans-serif"],
             },
             colors: {

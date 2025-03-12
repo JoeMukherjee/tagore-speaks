@@ -3,7 +3,7 @@ import os
 
 
 DB_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "tagore-conv-db")
+    os.path.join(os.path.dirname(__file__), "..", "..", "tagore-data")
 )
 
 CREATIONS_FILE = os.path.join(DB_DIR, "creations.json")
@@ -67,3 +67,75 @@ def list_creations(params=None):
         }
     except Exception as e:
         return {"error": str(e)}
+
+
+def format_creations_response(tool_response):
+    """
+    Format the creations tool response for display
+
+    Args:
+        tool_response (dict): The response from list_creations function
+
+    Returns:
+        Generator yielding formatted chunks for display
+    """
+    # Header
+    yield {
+        "type": "chunk",
+        "content": "\n\nHere are some of my creative works:\n\n",
+    }
+
+    # Handle the creations
+    if "creations" in tool_response:
+        creations = tool_response["creations"]
+        count = tool_response["count"]
+        work_type = tool_response["type"]
+
+        if count == 0:
+            # No creations found
+            if work_type == "all":
+                yield {
+                    "type": "chunk",
+                    "content": "You don't have any creative works saved yet.\n",
+                }
+            else:
+                yield {
+                    "type": "chunk",
+                    "content": f"You don't have any {work_type} works saved yet.\n",
+                }
+        else:
+            # Show each creation
+            for i, creation in enumerate(creations, 1):
+                title = creation.get("title", "Untitled")
+                creation_type = creation.get("type", "work")
+                snippet = creation.get("snippet", "")
+
+                creation_text = f'{i}. "{title}" ({creation_type})' + "\n"
+
+                if snippet:
+                    creation_text += f'   "{snippet}..."\n'
+
+                yield {
+                    "type": "chunk",
+                    "content": creation_text + "\n",
+                }
+
+    # Handle errors
+    elif "error" in tool_response:
+        yield {
+            "type": "chunk",
+            "content": f"Sorry, I encountered an error while retrieving your creative works: {tool_response['error']}\n",
+        }
+
+    # Handle messages
+    elif "message" in tool_response:
+        yield {
+            "type": "chunk",
+            "content": f"{tool_response['message']}\n",
+        }
+
+    # Closing line
+    yield {
+        "type": "chunk",
+        "content": "Let me know if you'd like more details about any of these works.\n\n",
+    }

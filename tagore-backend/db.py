@@ -2,9 +2,7 @@ import sqlite3
 import os
 import uuid
 
-DB_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "tagore-conv-db")
-)
+DB_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "tagore-data"))
 
 DB_FILE = os.path.join(DB_DIR, "tagore_speaks_conversations.db")
 
