@@ -7,13 +7,11 @@ export const useChatMessages = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [conversationId, setConversationId] = useState<string>();
 
-    // Remove markdown-like asterisks and trim start
     const cleanMessageContent = (text: string) =>
         text.replace(/\*[^*]*\*/g, "").trimStart();
 
     useEffect(() => {
         return () => {
-            // Find and close any open EventSource connections when unmounting
             const events = document.querySelectorAll("EventSource");
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             events.forEach((event: any) => {
@@ -25,14 +23,12 @@ export const useChatMessages = () => {
     }, []);
 
     const handleSendMessage = async (content: string) => {
-        // Add user message
         const userMessage: Message = {
             content,
             type: "user",
             timestamp: new Date(),
         };
 
-        // Add initial system message with loading state
         const systemMessage: Message = {
             content: "",
             type: "system",
@@ -41,16 +37,13 @@ export const useChatMessages = () => {
         };
 
         setMessages((prev) => [...prev, userMessage, systemMessage]);
-        // Use non-streaming mode
         try {
             const response = await sendMessage(content, conversationId);
 
-            // Update conversation ID if provided
             if (response.conversationId) {
                 setConversationId(response.conversationId);
             }
 
-            // Update the message with the full response
             setMessages((prev) => {
                 const newMessages = [...prev];
                 const lastMessage = newMessages[newMessages.length - 1];
@@ -70,11 +63,8 @@ export const useChatMessages = () => {
         }
     };
 
-    // Extract error handling to a separate function to avoid duplicating code
     const handleMessageError = (error: unknown) => {
         console.error("Error:", error);
-
-        // Update with error message
         setMessages((prev) => {
             const newMessages = [...prev];
             const lastMessage = newMessages[newMessages.length - 1];

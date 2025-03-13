@@ -6,13 +6,13 @@ const MicButton: React.FC<MicButtonProps> = ({
     onTranscriptionUpdate,
     isDisabled = false,
     systemIsTyping = false,
+    systemIsSpeaking = false,
 }) => {
     const [isActive, setIsActive] = useState(false);
+    const wasActiveBeforeTypingRef = useRef<boolean>(false);
+    const wasActiveBeforeSpeakingRef = useRef<boolean>(false);
     const speechService = getSpeechRecognitionService();
     const lastTextRef = useRef<string>("");
-    const wasActiveBeforeTypingRef = useRef<boolean>(false);
-    console.log("Rendered");
-    console.log(`wasActiveBeforeTypingRef: ${wasActiveBeforeTypingRef}`);
 
     useEffect(() => {
         speechService.setInactivityCallback(() => {
@@ -23,28 +23,43 @@ const MicButton: React.FC<MicButtonProps> = ({
     }, [onTranscriptionUpdate, speechService]);
 
     useEffect(() => {
-        console.log(
-            `wasActiveBeforeTypingRef: ${wasActiveBeforeTypingRef.current}, isActive: ${isActive}, systemIsTyping: ${systemIsTyping}`
-        );
-        if (systemIsTyping) {
-            wasActiveBeforeTypingRef.current = isActive;
+        // Disable mic when system is typing OR speaking
+        if (systemIsTyping || systemIsSpeaking) {
+            // Store the current active state to restore it later
+            if (systemIsTyping) {
+                wasActiveBeforeTypingRef.current = isActive;
+            }
+            if (systemIsSpeaking) {
+                wasActiveBeforeSpeakingRef.current = isActive;
+            }
 
             if (isActive) {
                 speechService.stopListening();
                 speechService.clearTranscript();
                 setIsActive(false);
             }
-        } else if (!systemIsTyping && wasActiveBeforeTypingRef.current) {
+        } else if (
+            !systemIsTyping &&
+            !systemIsSpeaking &&
+            (wasActiveBeforeTypingRef.current ||
+                wasActiveBeforeSpeakingRef.current)
+        ) {
             const newIsActive = speechService.startListening((text) => {
                 lastTextRef.current = text;
                 onTranscriptionUpdate(text, false);
             });
 
-            console.log(`newIsActive: ${newIsActive}`);
             setIsActive(newIsActive);
             wasActiveBeforeTypingRef.current = false;
+            wasActiveBeforeSpeakingRef.current = false;
         }
-    }, [isActive, onTranscriptionUpdate, speechService, systemIsTyping]);
+    }, [
+        isActive,
+        onTranscriptionUpdate,
+        speechService,
+        systemIsTyping,
+        systemIsSpeaking,
+    ]);
 
     useEffect(() => {
         return () => {
@@ -76,13 +91,13 @@ const MicButton: React.FC<MicButtonProps> = ({
     return (
         <button
             onClick={handleMicToggle}
-            disabled={isDisabled || systemIsTyping}
+            disabled={isDisabled || systemIsTyping || systemIsSpeaking}
             className={`p-2 mr-2 focus:outline-none ${
                 isActive
                     ? "text-red-500 hover:text-red-700"
                     : "text-gray-500 hover:text-gray-700"
             } ${
-                isDisabled || systemIsTyping
+                isDisabled || systemIsTyping || systemIsSpeaking
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
             }`}

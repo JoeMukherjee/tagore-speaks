@@ -52,4 +52,5 @@ export interface MicButtonProps {
     isDisabled?: boolean;
     onMicStateChange?: (isActive: boolean) => void;
     systemIsTyping?: boolean;
+    systemIsSpeaking?: boolean;
 }

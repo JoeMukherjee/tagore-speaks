@@ -5,6 +5,7 @@ import ExportPdfButton from "./ExportPdfButton";
 import MicButton from "./MicButton";
 import { useChatMessages } from "../hooks/useChatMessages";
 import { getSpeechRecognitionService } from "../../services/speechRecognition";
+import { getSpeechSynthesisService } from "../../services/speechSynthesis";
 
 const ChatContainer: React.FC = () => {
     const { messages, handleSendMessage } = useChatMessages();
@@ -12,7 +13,9 @@ const ChatContainer: React.FC = () => {
     const [transcribedText, setTranscribedText] = useState("");
     const [inputFocused, setInputFocused] = useState(false);
     const [systemIsTyping, setSystemIsTyping] = useState(false);
+    const [systemIsSpeaking, setSystemIsSpeaking] = useState(false);
     const speechService = getSpeechRecognitionService();
+    const speechSynthesisService = getSpeechSynthesisService();
 
     const scrollToBottom = () => {
         bottomRef.current?.scrollIntoView({
@@ -20,6 +23,20 @@ const ChatContainer: React.FC = () => {
             block: "end",
         });
     };
+
+    useEffect(() => {
+        if (messages.length > 0) {
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage.type === "system" && !lastMessage.isLoading) {
+                if (speechSynthesisService.isAvailable()) {
+                    setSystemIsSpeaking(true);
+                    speechSynthesisService.speak(lastMessage.content, () => {
+                        setSystemIsSpeaking(false);
+                    });
+                }
+            }
+        }
+    }, [messages, speechSynthesisService]);
 
     useEffect(() => {
         scrollToBottom();
@@ -88,6 +105,7 @@ const ChatContainer: React.FC = () => {
                                     }
                                     isDisabled={false}
                                     systemIsTyping={systemIsTyping}
+                                    systemIsSpeaking={systemIsSpeaking}
                                 />
                             </div>
                         </div>
