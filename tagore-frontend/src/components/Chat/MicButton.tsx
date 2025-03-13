@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { getSpeechRecognitionService } from "../../services/speechRecognition";
 import { MicButtonProps } from "../../types/chat";
 
@@ -7,8 +7,9 @@ const MicButton: React.FC<MicButtonProps> = ({
     isDisabled = false,
     systemIsTyping = false,
     systemIsSpeaking = false,
+    isMicActive,
+    setIsMicActive,
 }) => {
-    const [isActive, setIsActive] = useState(false);
     const wasActiveBeforeTypingRef = useRef<boolean>(false);
     const wasActiveBeforeSpeakingRef = useRef<boolean>(false);
     const speechService = getSpeechRecognitionService();
@@ -27,16 +28,16 @@ const MicButton: React.FC<MicButtonProps> = ({
         if (systemIsTyping || systemIsSpeaking) {
             // Store the current active state to restore it later
             if (systemIsTyping) {
-                wasActiveBeforeTypingRef.current = isActive;
+                wasActiveBeforeTypingRef.current = isMicActive;
             }
             if (systemIsSpeaking) {
-                wasActiveBeforeSpeakingRef.current = isActive;
+                wasActiveBeforeSpeakingRef.current = isMicActive;
             }
 
-            if (isActive) {
+            if (isMicActive) {
                 speechService.stopListening();
                 speechService.clearTranscript();
-                setIsActive(false);
+                setIsMicActive(false);
             }
         } else if (
             !systemIsTyping &&
@@ -49,43 +50,54 @@ const MicButton: React.FC<MicButtonProps> = ({
                 onTranscriptionUpdate(text, false);
             });
 
-            setIsActive(newIsActive);
+            setIsMicActive(newIsActive);
             wasActiveBeforeTypingRef.current = false;
             wasActiveBeforeSpeakingRef.current = false;
         }
     }, [
-        isActive,
+        isMicActive,
         onTranscriptionUpdate,
         speechService,
         systemIsTyping,
         systemIsSpeaking,
+        setIsMicActive,
     ]);
 
     useEffect(() => {
         return () => {
-            if (isActive) {
+            if (isMicActive) {
                 speechService.stopListening();
             }
         };
-    }, [isActive, speechService]);
+    }, [isMicActive, speechService]);
 
     const handleMicToggle = () => {
         if (isDisabled || systemIsTyping) return;
 
-        const newIsActive = speechService.toggleListening((text) => {
-            lastTextRef.current = text;
+        // If turning off, ensure we stop any ongoing speech synthesis
+        if (isMicActive) {
+            // Stop listening and clear transcript
+            speechService.stopListening();
+            speechService.clearTranscript();
+            lastTextRef.current = "";
+            setIsMicActive(false);
+        } else {
+            // Starting new listening session
+            const newIsActive = speechService.startListening((text) => {
+                lastTextRef.current = text;
 
-            const shouldSend = text.toLowerCase().includes("send message");
-            if (shouldSend) {
-                onTranscriptionUpdate(text, true);
-                speechService.clearTranscript();
-                lastTextRef.current = "";
-            } else {
-                onTranscriptionUpdate(text, false);
-            }
-        }, lastTextRef.current);
+                const shouldSend = text.toLowerCase().includes("send message");
+                if (shouldSend) {
+                    onTranscriptionUpdate(text, true);
+                    speechService.clearTranscript();
+                    lastTextRef.current = "";
+                } else {
+                    onTranscriptionUpdate(text, false);
+                }
+            });
 
-        setIsActive(newIsActive);
+            setIsMicActive(newIsActive);
+        }
     };
 
     return (
@@ -93,7 +105,7 @@ const MicButton: React.FC<MicButtonProps> = ({
             onClick={handleMicToggle}
             disabled={isDisabled || systemIsTyping || systemIsSpeaking}
             className={`p-2 mr-2 focus:outline-none ${
-                isActive
+                isMicActive
                     ? "text-red-500 hover:text-red-700"
                     : "text-gray-500 hover:text-gray-700"
             } ${
@@ -101,8 +113,8 @@ const MicButton: React.FC<MicButtonProps> = ({
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer"
             }`}
-            aria-label={isActive ? "Stop recording" : "Start recording"}
-            title={isActive ? "Stop recording" : "Start recording"}
+            aria-label={isMicActive ? "Stop recording" : "Start recording"}
+            title={isMicActive ? "Stop recording" : "Start recording"}
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

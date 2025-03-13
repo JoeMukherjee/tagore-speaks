@@ -14,7 +14,8 @@ const ChatContainer: React.FC = () => {
     const [inputFocused, setInputFocused] = useState(false);
     const [systemIsTyping, setSystemIsTyping] = useState(false);
     const [systemIsSpeaking, setSystemIsSpeaking] = useState(false);
-    const speechService = getSpeechRecognitionService();
+    const [isMicActive, setIsMicActive] = useState(false);
+    const speechRecognitionService = getSpeechRecognitionService();
     const speechSynthesisService = getSpeechSynthesisService();
 
     const scrollToBottom = () => {
@@ -25,18 +26,77 @@ const ChatContainer: React.FC = () => {
     };
 
     useEffect(() => {
+        const checkSpeechSynthesis = async () => {
+            if (speechSynthesisService.isAvailable()) {
+                return;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            setSystemIsSpeaking(false);
+        };
+
+        checkSpeechSynthesis();
+    }, [speechSynthesisService]);
+
+    // Then modify the main useEffect to handle all speech-related logic:
+    useEffect(() => {
+        console.log(`------------------------------------------`);
+        console.log(`current message length: ${messages.length}`);
+        if (messages.length > 0) {
+            console.log(
+                `current lastMessage: ${JSON.stringify(
+                    messages[messages.length - 1]
+                )}`
+            );
+        }
+        console.log(`current isMicActive: ${isMicActive}`);
+        console.log(
+            `current getSpeakingState: ${speechSynthesisService.getSpeakingState()}`
+        );
+        console.log(`current systemIsSpeaking: ${systemIsSpeaking}`);
+        console.log(`current systemIsTyping: ${systemIsTyping}`);
+
+        // Handle mic deactivation - stop any ongoing speech
+        if (!isMicActive && speechSynthesisService.getSpeakingState()) {
+            console.log("Stopping speech due to mic deactivation");
+            speechSynthesisService.stop(true);
+            setSystemIsSpeaking(false);
+            return; // Exit early to avoid processing message logic
+        }
+
+        // Handle new messages when mic is active
         if (messages.length > 0) {
             const lastMessage = messages[messages.length - 1];
-            if (lastMessage.type === "system" && !lastMessage.isLoading) {
-                if (speechSynthesisService.isAvailable()) {
+            if (
+                lastMessage.type === "system" &&
+                !lastMessage.isLoading &&
+                isMicActive
+            ) {
+                // Only start new speech if the mic is active AND we're not already speaking
+                if (
+                    speechSynthesisService.isAvailable() &&
+                    !speechSynthesisService.getSpeakingState()
+                ) {
+                    console.log("Starting speech for new message");
                     setSystemIsSpeaking(true);
-                    speechSynthesisService.speak(lastMessage.content, () => {
-                        setSystemIsSpeaking(false);
-                    });
+                    speechSynthesisService
+                        .speak(lastMessage.content, () => {
+                            console.log("Speech completed naturally");
+                            setSystemIsSpeaking(false);
+                        })
+                        .catch((error) => {
+                            console.error("Speech synthesis error:", error);
+                            setSystemIsSpeaking(false);
+                        });
                 }
             }
         }
-    }, [messages, speechSynthesisService]);
+    }, [
+        isMicActive,
+        messages,
+        speechSynthesisService,
+        systemIsSpeaking,
+        systemIsTyping,
+    ]);
 
     useEffect(() => {
         scrollToBottom();
@@ -52,7 +112,7 @@ const ChatContainer: React.FC = () => {
         if (shouldSend && cleanedText) {
             handleSendMessage(cleanedText);
             setTranscribedText("");
-            speechService.clearTranscript();
+            speechRecognitionService.clearTranscript();
         }
 
         scrollToBottom();
@@ -61,7 +121,7 @@ const ChatContainer: React.FC = () => {
     const handleSendWithClear = (message: string) => {
         handleSendMessage(message);
         setTranscribedText("");
-        speechService.clearTranscript();
+        speechRecognitionService.clearTranscript();
     };
 
     useEffect(() => {
@@ -106,6 +166,8 @@ const ChatContainer: React.FC = () => {
                                     isDisabled={false}
                                     systemIsTyping={systemIsTyping}
                                     systemIsSpeaking={systemIsSpeaking}
+                                    isMicActive={isMicActive}
+                                    setIsMicActive={setIsMicActive}
                                 />
                             </div>
                         </div>
