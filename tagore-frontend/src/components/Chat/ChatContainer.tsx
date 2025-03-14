@@ -155,7 +155,11 @@ const ChatContainer: React.FC = () => {
 
     return (
         <div className="flex justify-center h-full">
-            <div className="w-full min-h-full overflow-auto" ref={containerRef}>
+            <div
+                className="w-full min-h-full flex overflow-auto"
+                ref={containerRef}
+            >
+                <div className="w-[15%]"></div>
                 <div className="w-[70%] flex flex-col h-full mx-auto ">
                     <ChatMessageList
                         messages={messages}
@@ -208,14 +212,13 @@ const ChatContainer: React.FC = () => {
                                     autoFocus={inputFocused}
                                 />
                             </div>
-                            <div className="flex-shrink-0 flex flex-col justify-end mb-2">
+                            <div className="flex-shrink-0 flex flex-col items-center justify-end mb-2">
                                 <StopButton
                                     onClick={handleStop}
                                     isVisible={
                                         systemIsTyping || systemIsSpeaking
                                     }
                                 />
-                                {messages.length > 0 && <ExportPdfButton />}
                                 <MicButton
                                     onTranscriptionUpdate={
                                         handleTranscriptionUpdate
@@ -230,6 +233,11 @@ const ChatContainer: React.FC = () => {
                         </div>
                     </div>
                     <div ref={bottomRef} className="pb-1" />
+                </div>
+                <div className="w-[15%] flex flex-col justify-end">
+                    <div className="mb-7 ml-2">
+                        {messages.length > 0 && <ExportPdfButton />}
+                    </div>
                 </div>
             </div>
         </div>
