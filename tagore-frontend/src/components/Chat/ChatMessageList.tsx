@@ -7,9 +7,10 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
     messages,
     systemIsTyping,
     setSystemIsTyping,
+    forceComplete,
 }) => {
     return (
-        <div className="flex flex-1 w-full overflow-y-auto">
+        <div className="flex flex-1 w-full">
             <div className="flex justify-end flex-col w-full min-h-full chat-message-list">
                 {messages.length === 0 ? (
                     <div className="w-full text-center text-gray-500">
@@ -33,6 +34,7 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
                                         ? setSystemIsTyping
                                         : undefined
                                 }
+                                forceComplete={forceComplete}
                             />
                         ))}
                     </div>

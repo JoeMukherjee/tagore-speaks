@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { ChatResponse } from "../types/chat";
 
 export async function sendMessage(
@@ -6,14 +6,15 @@ export async function sendMessage(
     conversationId?: string
 ): Promise<ChatResponse> {
     try {
-        const { data } = await axios.post("api/chat", {
-            message: content,
-            conversationId,
-        });
-
+        // const { data } = await axios.post("api/chat", {
+        //     message: content,
+        //     conversationId,
+        // });
+        console.log(content);
+        console.log(conversationId);
         return {
-            message: data.response,
-            conversationId: data.conversationId,
+            message: "hello abhi. Hope you are doing well. ",
+            conversationId: "sasdsa",
             isLoading: false,
         };
     } catch (error) {

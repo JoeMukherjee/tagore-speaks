@@ -7,6 +7,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
     minDelay = 20,
     maxDelay = 70,
     setSystemIsTyping,
+    forceComplete = false,
 }) => {
     const [displayedContent, setDisplayedContent] = useState("");
     const contentRef = useRef(content);
@@ -19,6 +20,14 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
     }, [content, isAnimating]);
 
     useEffect(() => {
+        if (forceComplete && displayedContent !== content) {
+            setDisplayedContent(content);
+            if (setSystemIsTyping) {
+                setSystemIsTyping(false);
+            }
+            isCompletedRef.current = true;
+            return;
+        }
         if (
             !content.startsWith(displayedContent) &&
             !displayedContent.startsWith(content)
@@ -47,7 +56,15 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
 
             return () => clearTimeout(timeout);
         }
-    }, [content, displayedContent, isAnimating, minDelay, maxDelay]);
+    }, [
+        content,
+        displayedContent,
+        isAnimating,
+        minDelay,
+        maxDelay,
+        forceComplete,
+        setSystemIsTyping,
+    ]);
 
     useEffect(() => {
         if (displayedContent === content && content.length > 0) {

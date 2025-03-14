@@ -78,6 +78,7 @@ class SpeechSynthesisService {
                     voice: {
                         mode: "id",
                         id: "694f9389-aac1-45b6-b726-9d9369183238",
+                        // id: "343436fb-9fcd-4dd1-a769-f83188cf95ea",
                     },
                     language: "en",
                     outputFormat: {
@@ -180,7 +181,8 @@ class SpeechSynthesisService {
                 modelId: "sonic-2",
                 voice: {
                     mode: "id",
-                    id: "a0e99841-438c-4a64-b679-ae501e7d6091",
+                    // id: "a0e99841-438c-4a64-b679-ae501e7d6091",
+                    id: "343436fb-9fcd-4dd1-a769-f83188cf95ea",
                 },
                 transcript: text,
             });

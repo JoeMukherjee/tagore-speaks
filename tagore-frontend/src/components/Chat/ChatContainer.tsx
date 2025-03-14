@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
+import StopButton from "./StopButton";
 import ExportPdfButton from "./ExportPdfButton";
 import MicButton from "./MicButton";
 import { useChatMessages } from "../hooks/useChatMessages";
-import { getSpeechRecognitionService } from "../../services/speechRecognition";
 import { getSpeechSynthesisService } from "../../services/speechSynthesis";
 
 const ChatContainer: React.FC = () => {
@@ -15,15 +15,57 @@ const ChatContainer: React.FC = () => {
     const [systemIsTyping, setSystemIsTyping] = useState(false);
     const [systemIsSpeaking, setSystemIsSpeaking] = useState(false);
     const [isMicActive, setIsMicActive] = useState(false);
-    const speechRecognitionService = getSpeechRecognitionService();
     const speechSynthesisService = getSpeechSynthesisService();
+    const lastSpokenMessageIndexRef = useRef<number>(-1);
+    const micActivatedTimestampRef = useRef<Date | null>(null);
+    const [forceComplete, setForceComplete] = useState(false);
+    const [showScrollButton, setShowScrollButton] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Add this function to handle stopping
+    const handleStop = () => {
+        if (systemIsSpeaking) {
+            speechSynthesisService.stop(true);
+            setSystemIsSpeaking(false);
+        }
+        setForceComplete(true);
+        setTimeout(() => setForceComplete(false), 100);
+        setSystemIsTyping(false);
+    };
 
     const scrollToBottom = () => {
-        bottomRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-        });
+        console.log("Scrolling to bottom");
+        setTimeout(() => {
+            if (bottomRef.current) {
+                bottomRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "end",
+                });
+            }
+        }, 100);
     };
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            // Show button if not at bottom (with a small buffer)
+            setShowScrollButton(scrollHeight - scrollTop - clientHeight > 100);
+        };
+
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        if (isMicActive) {
+            micActivatedTimestampRef.current = new Date();
+        } else {
+            micActivatedTimestampRef.current = null;
+        }
+    }, [isMicActive]);
 
     useEffect(() => {
         const checkSpeechSynthesis = async () => {
@@ -39,47 +81,37 @@ const ChatContainer: React.FC = () => {
 
     // Then modify the main useEffect to handle all speech-related logic:
     useEffect(() => {
-        console.log(`------------------------------------------`);
-        console.log(`current message length: ${messages.length}`);
-        if (messages.length > 0) {
-            console.log(
-                `current lastMessage: ${JSON.stringify(
-                    messages[messages.length - 1]
-                )}`
-            );
-        }
-        console.log(`current isMicActive: ${isMicActive}`);
-        console.log(
-            `current getSpeakingState: ${speechSynthesisService.getSpeakingState()}`
-        );
-        console.log(`current systemIsSpeaking: ${systemIsSpeaking}`);
-        console.log(`current systemIsTyping: ${systemIsTyping}`);
-
-        // Handle mic deactivation - stop any ongoing speech
         if (!isMicActive && speechSynthesisService.getSpeakingState()) {
             console.log("Stopping speech due to mic deactivation");
             speechSynthesisService.stop(true);
             setSystemIsSpeaking(false);
-            return; // Exit early to avoid processing message logic
+            return;
         }
 
-        // Handle new messages when mic is active
-        if (messages.length > 0) {
-            const lastMessage = messages[messages.length - 1];
+        if (messages.length > 0 && micActivatedTimestampRef.current !== null) {
+            const currentIndex = messages.length - 1;
+            const lastMessage = messages[currentIndex];
+
+            const isNewMessage =
+                currentIndex > lastSpokenMessageIndexRef.current &&
+                lastMessage.timestamp > micActivatedTimestampRef.current;
+
             if (
+                isNewMessage &&
                 lastMessage.type === "system" &&
                 !lastMessage.isLoading &&
                 isMicActive
             ) {
-                // Only start new speech if the mic is active AND we're not already speaking
                 if (
                     speechSynthesisService.isAvailable() &&
                     !speechSynthesisService.getSpeakingState()
                 ) {
                     console.log("Starting speech for new message");
                     setSystemIsSpeaking(true);
+                    lastSpokenMessageIndexRef.current = currentIndex;
+
                     speechSynthesisService
-                        .speak(lastMessage.content, () => {
+                        .speakWithWebPlayer(lastMessage.content, () => {
                             console.log("Speech completed naturally");
                             setSystemIsSpeaking(false);
                         })
@@ -112,31 +144,50 @@ const ChatContainer: React.FC = () => {
         if (shouldSend && cleanedText) {
             handleSendMessage(cleanedText);
             setTranscribedText("");
-            speechRecognitionService.clearTranscript();
         }
-
         scrollToBottom();
     };
 
     const handleSendWithClear = (message: string) => {
         handleSendMessage(message);
         setTranscribedText("");
-        speechRecognitionService.clearTranscript();
     };
-
-    useEffect(() => {
-        console.log(`SystemIsTyping state changed to: ${systemIsTyping}`);
-    }, [systemIsTyping]);
 
     return (
         <div className="flex justify-center h-full">
-            <div className="w-full min-h-full overflow-hidden">
-                <div className="w-[70%] flex flex-col h-full mx-auto">
+            <div className="w-full min-h-full overflow-auto" ref={containerRef}>
+                <div className="w-[70%] flex flex-col h-full mx-auto ">
                     <ChatMessageList
                         messages={messages}
                         systemIsTyping={systemIsTyping}
                         setSystemIsTyping={setSystemIsTyping}
+                        forceComplete={forceComplete}
                     />
+
+                    <button
+                        className={`fixed bottom-2 left-1/2 transform -translate-x-1/2 p-2 
+                bg-gray-200/30 backdrop-blur-md rounded-full
+                hover:bg-gray-400/50 z-10 transition-opacity duration-300 
+                ${
+                    showScrollButton
+                        ? "opacity-100 pointer-events-auto"
+                        : "opacity-0 pointer-events-none"
+                }`}
+                        onClick={scrollToBottom}
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M12 5v14M5 12l7 7 7-7"></path>
+                        </svg>
+                    </button>
 
                     <div
                         className={`{w-full bg-gray-100 rounded-lg pt-2 mt-2 mb-4 transition-all duration-300 ${
@@ -158,6 +209,12 @@ const ChatContainer: React.FC = () => {
                                 />
                             </div>
                             <div className="flex-shrink-0 flex flex-col justify-end mb-2">
+                                <StopButton
+                                    onClick={handleStop}
+                                    isVisible={
+                                        systemIsTyping || systemIsSpeaking
+                                    }
+                                />
                                 {messages.length > 0 && <ExportPdfButton />}
                                 <MicButton
                                     onTranscriptionUpdate={
@@ -172,8 +229,8 @@ const ChatContainer: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                    <div ref={bottomRef} className="pb-1" />
                 </div>
-                <div ref={bottomRef} />
             </div>
         </div>
     );

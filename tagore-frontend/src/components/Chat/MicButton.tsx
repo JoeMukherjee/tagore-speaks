@@ -10,8 +10,6 @@ const MicButton: React.FC<MicButtonProps> = ({
     isMicActive,
     setIsMicActive,
 }) => {
-    const wasActiveBeforeTypingRef = useRef<boolean>(false);
-    const wasActiveBeforeSpeakingRef = useRef<boolean>(false);
     const speechService = getSpeechRecognitionService();
     const lastTextRef = useRef<string>("");
 
@@ -23,67 +21,17 @@ const MicButton: React.FC<MicButtonProps> = ({
         });
     }, [onTranscriptionUpdate, speechService]);
 
+    // First useEffect: Handles when isMicActive changes
+    // Single useEffect to handle all state changes
     useEffect(() => {
-        // Disable mic when system is typing OR speaking
-        if (systemIsTyping || systemIsSpeaking) {
-            // Store the current active state to restore it later
-            if (systemIsTyping) {
-                wasActiveBeforeTypingRef.current = isMicActive;
-            }
-            if (systemIsSpeaking) {
-                wasActiveBeforeSpeakingRef.current = isMicActive;
-            }
+        // Check if we should be listening or not
+        const shouldBeListen =
+            isMicActive && !systemIsTyping && !systemIsSpeaking;
+        const isCurrentlyListening = speechService.getIsListening();
 
-            if (isMicActive) {
-                speechService.stopListening();
-                speechService.clearTranscript();
-                setIsMicActive(false);
-            }
-        } else if (
-            !systemIsTyping &&
-            !systemIsSpeaking &&
-            (wasActiveBeforeTypingRef.current ||
-                wasActiveBeforeSpeakingRef.current)
-        ) {
-            const newIsActive = speechService.startListening((text) => {
-                lastTextRef.current = text;
-                onTranscriptionUpdate(text, false);
-            });
-
-            setIsMicActive(newIsActive);
-            wasActiveBeforeTypingRef.current = false;
-            wasActiveBeforeSpeakingRef.current = false;
-        }
-    }, [
-        isMicActive,
-        onTranscriptionUpdate,
-        speechService,
-        systemIsTyping,
-        systemIsSpeaking,
-        setIsMicActive,
-    ]);
-
-    useEffect(() => {
-        return () => {
-            if (isMicActive) {
-                speechService.stopListening();
-            }
-        };
-    }, [isMicActive, speechService]);
-
-    const handleMicToggle = () => {
-        if (isDisabled || systemIsTyping) return;
-
-        // If turning off, ensure we stop any ongoing speech synthesis
-        if (isMicActive) {
-            // Stop listening and clear transcript
-            speechService.stopListening();
-            speechService.clearTranscript();
-            lastTextRef.current = "";
-            setIsMicActive(false);
-        } else {
-            // Starting new listening session
-            const newIsActive = speechService.startListening((text) => {
+        // Case 1: Should be listening but currently not
+        if (shouldBeListen && !isCurrentlyListening) {
+            speechService.startListening((text) => {
                 lastTextRef.current = text;
 
                 const shouldSend = text.toLowerCase().includes("send message");
@@ -95,9 +43,35 @@ const MicButton: React.FC<MicButtonProps> = ({
                     onTranscriptionUpdate(text, false);
                 }
             });
-
-            setIsMicActive(newIsActive);
         }
+        // Case 2: Shouldn't be listening but currently is
+        else if (!shouldBeListen && isCurrentlyListening) {
+            speechService.stopListening();
+            speechService.clearTranscript();
+        }
+
+        // No action needed if (shouldBeListen && isCurrentlyListening) or (!shouldBeListen && !isCurrentlyListening)
+    }, [
+        isMicActive,
+        systemIsTyping,
+        systemIsSpeaking,
+        speechService,
+        onTranscriptionUpdate,
+    ]);
+
+    useEffect(() => {
+        return () => {
+            if (isMicActive) {
+                speechService.stopListening();
+            }
+        };
+    }, [isMicActive, speechService]);
+
+    const handleMicToggle = () => {
+        if (isDisabled) return;
+
+        // Just toggle the state, let the effect handle the service
+        setIsMicActive(!isMicActive);
     };
 
     return (

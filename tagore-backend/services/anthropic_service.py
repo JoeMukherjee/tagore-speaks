@@ -1,5 +1,11 @@
+import logging
 import anthropic  # type: ignore
 from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, MAX_TOKENS, SYSTEM_PROMPT
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 
 class AnthropicService:
@@ -9,7 +15,7 @@ class AnthropicService:
         self.model = ANTHROPIC_MODEL
         self.max_tokens = MAX_TOKENS
         self.system_prompt = SYSTEM_PROMPT
-        print(f"MODEL BEING USED: {self.model}")
+        logger.info(f"MODEL BEING USED: {self.model}")
 
     def get_client(self):
         """Return the initialized client"""

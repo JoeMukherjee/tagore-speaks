@@ -63,8 +63,8 @@ export class SpeechRecognitionService {
     private finalTranscript: string = "";
     private interimTranscript: string = "";
 
-    private inactivityTimeout: number | null = null;
-    private inactivityDelay: number = 5000; // 5 seconds
+    private inactivityTimeout: ReturnType<typeof setTimeout> | null = null;
+    private inactivityDelay: number = 5000;
     private inactivityCallback: (() => void) | null = null;
 
     constructor() {
@@ -86,9 +86,7 @@ export class SpeechRecognitionService {
 
         // Set up event handlers
         this.recognition.onresult = this.handleResult.bind(this);
-        this.recognition.onerror = this.handleError.bind(this) as (
-            event: Event
-        ) => void;
+        this.recognition.onerror = this.handleError.bind(this);
         this.recognition.onend = this.handleEnd.bind(this);
     }
 
@@ -139,8 +137,38 @@ export class SpeechRecognitionService {
     /**
      * Handle speech recognition errors
      */
-    private handleError(event: Event) {
+    private handleError(event: SpeechRecognitionErrorEvent) {
         console.error("Speech recognition error:", event);
+
+        // Handle "no-speech" error specifically
+        if (event.error === "no-speech") {
+            // Only attempt to restart if we're supposed to be listening
+            if (this.isListening && this.recognition) {
+                // We need to wait for the current recognition instance to fully end
+                this.recognition.onend = () => {
+                    // Only start again if we're still supposed to be listening
+                    if (this.isListening && this.recognition) {
+                        try {
+                            this.recognition?.start();
+                            // Restore the original onend handler after successful restart
+                            this.recognition.onend = this.handleEnd.bind(this);
+                        } catch (e) {
+                            console.error(
+                                "Error restarting speech recognition:",
+                                e
+                            );
+                        }
+                    }
+                };
+
+                // Stop the current recognition to trigger the onend event
+                try {
+                    this.recognition.stop();
+                } catch (e) {
+                    console.error("Error stopping speech recognition:", e);
+                }
+            }
+        }
     }
 
     /**

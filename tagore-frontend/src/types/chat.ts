@@ -13,6 +13,7 @@ export interface ChatMessageListProps {
     messages: Message[];
     systemIsTyping: boolean;
     setSystemIsTyping: (isTyping: boolean) => void;
+    forceComplete?: boolean;
 }
 
 export interface ChatResponse {
@@ -45,6 +46,7 @@ export interface AnimatedTextProps {
     maxDelay?: number;
     systemIsTyping?: boolean;
     setSystemIsTyping?: (isTyping: boolean) => void;
+    forceComplete?: boolean;
 }
 
 export interface MicButtonProps {
@@ -55,4 +57,9 @@ export interface MicButtonProps {
     systemIsSpeaking?: boolean;
     isMicActive: boolean;
     setIsMicActive: (isMicActive: boolean) => void;
+}
+
+export interface StopButtonProps {
+    onClick: () => void;
+    isVisible: boolean;
 }

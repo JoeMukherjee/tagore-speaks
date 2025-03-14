@@ -1,8 +1,14 @@
 import uuid
+import logging
 import os
 from flask import Response, stream_with_context, Blueprint, request, jsonify  # type: ignore
 from services.response_service import ResponseService
 import json
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 chat_bp = Blueprint("chat", __name__)
 response_service = ResponseService()
@@ -16,7 +22,7 @@ def chat_message():
 
     if not conversation_id:
         conversation_id = str(uuid.uuid4())
-        print(f"Created new conversation ID: {conversation_id}")
+        logger.info(f"Created new conversation ID: {conversation_id}")
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
@@ -27,7 +33,7 @@ def chat_message():
         )
         return jsonify({"response": response_text, "conversationId": conversation_id})
     except Exception as e:
-        print(f"Error in chat_message: {str(e)}")
+        logger.info(f"Error in chat_message: {str(e)}")
         return jsonify({"error": str(e), "conversationId": conversation_id}), 500
 
 
@@ -46,5 +52,5 @@ def get_cartesia_auth():
             }
         )
     except Exception as e:
-        print(f"Error generating Cartesia auth: {str(e)}")
+        logger.info(f"Error generating Cartesia auth: {str(e)}")
         return jsonify({"error": str(e)}), 500

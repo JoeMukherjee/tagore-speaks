@@ -8,8 +8,16 @@ const ChatMessage: React.FC<
     Message & {
         systemIsTyping?: boolean;
         setSystemIsTyping?: (isTyping: boolean) => void;
+        forceComplete?: boolean;
     }
-> = ({ content, type, isLoading, systemIsTyping, setSystemIsTyping }) => {
+> = ({
+    content,
+    type,
+    isLoading,
+    systemIsTyping,
+    setSystemIsTyping,
+    forceComplete,
+}) => {
     return (
         <div
             className={`max-w-[80%] min-w-[20%] chat-message ${
@@ -34,6 +42,7 @@ const ChatMessage: React.FC<
                             isAnimating={true}
                             systemIsTyping={systemIsTyping}
                             setSystemIsTyping={setSystemIsTyping}
+                            forceComplete={forceComplete}
                         />
                     ) : (
                         <p className="whitespace-pre-wrap">{content}</p>
