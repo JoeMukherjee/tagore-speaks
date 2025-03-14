@@ -21,6 +21,7 @@ const ChatContainer: React.FC = () => {
     const [forceComplete, setForceComplete] = useState(false);
     const [showScrollButton, setShowScrollButton] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [currentColor, setCurrentColor] = useState("rgba(255, 0, 0, 0.7)");
 
     // Add this function to handle stopping
     const handleStop = () => {
@@ -44,6 +45,34 @@ const ChatContainer: React.FC = () => {
             }
         }, 100);
     };
+
+    useEffect(() => {
+        // Add this type annotation
+        let timerId: ReturnType<typeof setInterval> | undefined;
+
+        if (isMicActive) {
+            // Function to generate a random color
+            const getRandomColor = () => {
+                const r = Math.floor(Math.random() * 256);
+                const g = Math.floor(Math.random() * 256);
+                const b = Math.floor(Math.random() * 256);
+                return `rgba(${r}, ${g}, ${b}, 0.7)`;
+            };
+
+            // Change color immediately when mic is activated
+            setCurrentColor(getRandomColor());
+
+            // Then set up interval for changing colors
+            timerId = setInterval(() => {
+                setCurrentColor(getRandomColor());
+            }, 3000);
+        }
+
+        // Clean up on unmount or when isMicActive changes
+        return () => {
+            if (timerId) clearInterval(timerId);
+        };
+    }, [isMicActive]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -194,11 +223,19 @@ const ChatContainer: React.FC = () => {
                     </button>
 
                     <div
-                        className={`{w-full bg-gray-100 rounded-lg pt-2 mt-2 mb-4 transition-all duration-300 ${
-                            inputFocused
+                        className={`w-full bg-gray-100 rounded-lg pt-2 mt-2 mb-4 transition-all duration-300 ${
+                            inputFocused && !isMicActive
                                 ? "shadow-[0_0_20px_rgba(209,213,219,0.8)]"
                                 : ""
                         }`}
+                        style={
+                            isMicActive
+                                ? {
+                                      boxShadow: `0 0 20px ${currentColor}`,
+                                      transition: "box-shadow 1s ease",
+                                  }
+                                : {}
+                        }
                     >
                         <div className="flex">
                             <div className="flex-grow">

@@ -11,7 +11,7 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
 }) => {
     return (
         <div className="flex flex-1 w-full">
-            <div className="flex justify-end flex-col w-full min-h-full chat-message-list">
+            <div className="flex justify-end flex-col w-full chat-message-list">
                 {messages.length === 0 ? (
                     <div className="w-full text-center text-gray-500">
                         Start a conversation by typing a message below.

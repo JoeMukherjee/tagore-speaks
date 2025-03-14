@@ -17,6 +17,10 @@ html {
 @tailwind components;
 @tailwind utilities;
 
+.color-transition {
+    transition: box-shadow 3s ease;
+}
+
 /* Custom styles that extend Tailwind */
 @layer base {
     /* Box sizing is already handled by Tailwind's preflight */
@@ -136,7 +140,6 @@ html {
         position: static !important;
         height: auto !important;
         overflow: visible !important;
-        margin-top: 10px;
     }
 
     /* Hide the input box and export button when printing */
