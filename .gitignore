@@ -18,8 +18,9 @@ tagore-backend/.env
 tagore-backend/*.log
 
 # Database Ignore
-tagore-data/
-tagore-data/*
+tagore-data/creations.json
+tagore-data/tagore_speaks*
+tagore-data/tagore-data/*.pdf
 
 # IDE and Editor files
 .vscode/

@@ -65,7 +65,7 @@ const ChatContainer: React.FC = () => {
             // Then set up interval for changing colors
             timerId = setInterval(() => {
                 setCurrentColor(getRandomColor());
-            }, 3000);
+            }, 400);
         }
 
         // Clean up on unmount or when isMicActive changes
