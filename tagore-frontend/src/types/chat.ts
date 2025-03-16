@@ -7,6 +7,7 @@ export interface Message {
     type: MessageType;
     timestamp: Date;
     isLoading?: boolean;
+    speakableChunks?: Array<{ text: string; speakable: boolean }>;
 }
 
 export interface ChatMessageListProps {
@@ -20,6 +21,7 @@ export interface ChatResponse {
     message: string;
     isLoading: boolean;
     conversationId?: string;
+    speakableChunks?: Array<{ text: string; speakable: boolean }>;
 }
 
 export interface ChatInputProps {

@@ -28,10 +28,16 @@ def chat_message():
         return jsonify({"error": "No message provided"}), 400
 
     try:
-        response_text = response_service.generate_full_response(
+        response_text, speakable_chunks = response_service.generate_full_response(
             user_message, conversation_id
         )
-        return jsonify({"response": response_text, "conversationId": conversation_id})
+        return jsonify(
+            {
+                "response": response_text,
+                "conversationId": conversation_id,
+                "speakableChunks": speakable_chunks,
+            }
+        )
     except Exception as e:
         logger.info(f"Error in chat_message: {str(e)}")
         return jsonify({"error": str(e), "conversationId": conversation_id}), 500

@@ -11,9 +11,12 @@ export async function sendMessage(
             conversationId,
         });
 
+        console.log(data);
+
         return {
             message: data.response,
             conversationId: data.conversationId,
+            speakableChunks: data.speakableChunks,
             isLoading: false,
         };
     } catch (error) {

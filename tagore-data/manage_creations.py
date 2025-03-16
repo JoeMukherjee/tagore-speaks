@@ -480,6 +480,7 @@ def interactive_edit_work():
             print("Invalid input, category unchanged")
 
     elif choice == "3":
+        print(work)
         # Edit content/parts
         if work["has_parts"]:
             # Show available parts
@@ -562,6 +563,31 @@ def interactive_edit_work():
 
             else:
                 print("Invalid choice")
+        else:
+            # Edit for single part work
+            if "parts" in work and work["parts"]:
+                part = work["parts"][0]  # Get the first (and only) part
+                print("\nCurrent content:")
+                print(part["content"])
+
+                print("\nEnter new content (end with a line containing only '---'):")
+                content_lines = []
+                while True:
+                    line = input()
+                    if line == "---":
+                        break
+                    content_lines.append(line)
+
+                content = "\n".join(content_lines)
+
+                # Update the work's part content
+                cursor.execute(
+                    "UPDATE work_parts SET content = ? WHERE work_id = ? AND part_number = ?",
+                    (content, work_id, part["part_number"]),
+                )
+                print("Work content updated")
+            else:
+                print("Error: No content found for this work")
 
     conn.commit()
     conn.close()

@@ -53,6 +53,7 @@ export const useChatMessages = () => {
                         ...lastMessage,
                         isLoading: false,
                         content: cleanMessageContent(response.message),
+                        speakableChunks: response.speakableChunks,
                     };
                 }
 
