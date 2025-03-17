@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
 import StopButton from "./StopButton";
-import ExportPdfButton from "./ExportPdfButton";
 import MicButton from "./MicButton";
+import AudioVisualization from "./AudioVisualization";
 import { useChatMessages } from "../hooks/useChatMessages";
 import { getSpeechSynthesisService } from "../../services/speechSynthesis";
+import { useTheme } from "../../theme/useTheme";
 
 const ChatContainer: React.FC = () => {
+    const { theme } = useTheme();
     const { messages, handleSendMessage } = useChatMessages();
     const bottomRef = useRef<HTMLDivElement>(null);
     const [transcribedText, setTranscribedText] = useState("");
@@ -32,6 +34,7 @@ const ChatContainer: React.FC = () => {
         setForceComplete(true);
         setTimeout(() => setForceComplete(false), 100);
         setSystemIsTyping(false);
+        scrollToBottom();
     };
 
     const scrollToBottom = () => {
@@ -189,23 +192,29 @@ const ChatContainer: React.FC = () => {
                 ref={containerRef}
             >
                 <div className="w-[15%]"></div>
-                <div className="w-[70%] flex flex-col h-full mx-auto ">
+                <div className="w-[70%] flex flex-col h-full mx-auto">
                     <ChatMessageList
                         messages={messages}
                         systemIsTyping={systemIsTyping}
                         setSystemIsTyping={setSystemIsTyping}
                         forceComplete={forceComplete}
+                        onSendMessage={handleSendMessage}
+                        scrollToBottom={scrollToBottom}
                     />
 
                     <button
                         className={`fixed bottom-2 left-1/2 transform -translate-x-1/2 p-2 
-                bg-gray-200/30 backdrop-blur-md rounded-full
-                hover:bg-gray-400/50 z-10 transition-opacity duration-300 
-                ${
-                    showScrollButton
-                        ? "opacity-100 pointer-events-auto"
-                        : "opacity-0 pointer-events-none"
-                }`}
+                  backdrop-blur-md rounded-full
+                  hover:bg-opacity-50 z-10 transition-opacity duration-300 
+                  ${
+                      showScrollButton
+                          ? "opacity-100 pointer-events-auto"
+                          : "opacity-0 pointer-events-none"
+                  }`}
+                        style={{
+                            backgroundColor: theme.colors.button.DEFAULT,
+                            color: theme.colors.text.DEFAULT,
+                        }}
                         onClick={scrollToBottom}
                     >
                         <svg
@@ -221,21 +230,20 @@ const ChatContainer: React.FC = () => {
                             <path d="M12 5v14M5 12l7 7 7-7"></path>
                         </svg>
                     </button>
-
+                    <AudioVisualization
+                        isVisible={isMicActive && systemIsSpeaking}
+                    />
                     <div
-                        className={`w-full bg-gray-100 rounded-lg pt-2 mt-2 mb-4 transition-all duration-300 ${
-                            inputFocused && !isMicActive
-                                ? "shadow-[0_0_20px_rgba(209,213,219,0.8)]"
-                                : ""
-                        }`}
-                        style={
-                            isMicActive
-                                ? {
-                                      boxShadow: `0 0 20px ${currentColor}`,
-                                      transition: "box-shadow 1s ease",
-                                  }
-                                : {}
-                        }
+                        className={`w-full rounded-lg pt-2 mt-2 mb-4 transition-all duration-300`}
+                        style={{
+                            backgroundColor: theme.colors.input.background,
+                            boxShadow: isMicActive
+                                ? `0 0 20px ${currentColor}`
+                                : inputFocused && !isMicActive
+                                ? `0 0 20px ${theme.colors.shadow}`
+                                : "none",
+                            transition: "box-shadow 1s ease",
+                        }}
                     >
                         <div className="flex">
                             <div className="flex-grow">
@@ -271,11 +279,7 @@ const ChatContainer: React.FC = () => {
                     </div>
                     <div ref={bottomRef} className="pb-1" />
                 </div>
-                <div className="w-[15%] flex flex-col justify-end">
-                    <div className="mb-7 ml-2">
-                        {messages.length > 0 && <ExportPdfButton />}
-                    </div>
-                </div>
+                <div className="w-[15%]"></div>
             </div>
         </div>
     );

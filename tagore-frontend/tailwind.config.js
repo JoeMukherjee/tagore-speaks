@@ -1,37 +1,37 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+    darkMode: "class",
     theme: {
         extend: {
+            // Your existing extensions
             fontFamily: {
                 sans: ["Rubik", "system-ui", "sans-serif"],
-                // Heading font
                 serif: ["Caudex", "Georgia", "serif"],
-                // Named variants for semantic usage
                 heading: ["Caudex", "Georgia", "serif"],
                 body: ["Rubik", "system-ui", "sans-serif"],
             },
             colors: {
                 primary: {
-                    DEFAULT: "#646cff",
-                    hover: "#535bf2",
+                    DEFAULT: "var(--primary)",
+                    hover: "var(--primary-hover)",
                 },
                 background: {
-                    dark: "#242424",
-                    light: "#ffffff",
+                    DEFAULT: "var(--background)",
+                    dark: "var(--background-dark)",
+                    light: "var(--background-light)",
                 },
                 text: {
-                    dark: "rgba(255, 255, 255, 0.87)",
-                    light: "#213547",
+                    DEFAULT: "var(--text)",
+                    muted: "var(--text-muted)",
+                    dark: "var(--text-dark)",
+                    light: "var(--text-light)",
                 },
-                button: {
-                    dark: "#1a1a1a",
-                    light: "#f9f9f9",
+                // Add other color variables
+                link: {
+                    DEFAULT: "var(--link)",
+                    hover: "var(--link-hover)",
                 },
-            },
-            dropShadow: {
-                logo: "0 0 2em #646cffaa",
-                "logo-react": "0 0 2em #61dafbaa",
             },
         },
     },

@@ -53,6 +53,27 @@ html {
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+
+        --bgPrimary: #ffffff;
+        --bgSecondary: #f3f4f6;
+        --bgInput: #f3f4f6;
+        --bgChat-user: #f3f4f6;
+        --bgChat-system: transparent;
+        --textPrimary: #000000;
+        --textSecondary: #4b5563;
+        --textMuted: #6b7280;
+        --accent: #3b82f6;
+        --stopButton: #f87171;
+        --micActive: #ef4444;
+        --micInactive: #6b7280;
+        --borderColor: #e5e7eb;
+        --shadow: rgba(209, 213, 219, 0.8);
+        --linkColor: #2563eb;
+        --linkHoverColor: #1d4ed8;
+    }
+
+    .dark {
+        color-scheme: dark;
     }
 
     /* Animation that can't easily be done with Tailwind */
@@ -124,6 +145,7 @@ html {
         position: static !important;
         padding: 20px 0;
         margin-bottom: 20px;
+        background-color: transparent !important;
     }
 
     /* Fix chat container to avoid page breaks between header and content */
@@ -163,5 +185,14 @@ html {
     /* Prevent messages from breaking across pages */
     .chat-message {
         page-break-inside: avoid;
+    }
+
+    .print-hide {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    [style*="background-color"] {
+        background-color: transparent !important;
     }
 }

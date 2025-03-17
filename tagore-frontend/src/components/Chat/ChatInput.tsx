@@ -1,6 +1,7 @@
 // src/components/Chat/ChatInput.tsx
 import React, { useState, useEffect } from "react";
 import { ExtendedChatInputProps } from "../../types/chat";
+import { useTheme } from "../../theme/useTheme";
 
 const ChatInput: React.FC<ExtendedChatInputProps> = ({
     onSendMessage,
@@ -15,6 +16,7 @@ const ChatInput: React.FC<ExtendedChatInputProps> = ({
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const formRef = React.useRef<HTMLFormElement>(null);
     const [, setIsFocused] = useState(false);
+    const { theme } = useTheme();
 
     // Update message when transcribed text changes
     useEffect(() => {
@@ -98,6 +100,7 @@ const ChatInput: React.FC<ExtendedChatInputProps> = ({
                 onBlur={handleBlur}
                 placeholder="Message Tagore..."
                 className="flex-grow p-2 bg-transparent border-0 outline-none focus:outline-none ring-0 focus:ring-0 resize-none"
+                style={{ color: theme.colors.text.DEFAULT }}
                 autoFocus
             />
         </form>

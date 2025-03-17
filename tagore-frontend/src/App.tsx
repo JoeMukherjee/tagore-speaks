@@ -1,10 +1,18 @@
 // src/App.tsx
 import ChatContainer from "./components/Chat/ChatContainer";
 import Header from "./components/Header";
+import { ThemeProvider } from "./theme/ThemeContext";
+import { useTheme } from "./theme/useTheme";
 
-function App() {
+// Wrapped component that has access to theme
+const AppContent: React.FC = () => {
+    const { theme } = useTheme();
+
     return (
-        <div className="bg-white flex flex-col h-screen mx-auto">
+        <div
+            className="flex flex-col h-screen mx-auto"
+            style={{ backgroundColor: theme.colors.background.DEFAULT }}
+        >
             {/* Use the Header component */}
             <Header />
 
@@ -13,6 +21,14 @@ function App() {
                 <ChatContainer />
             </div>
         </div>
+    );
+};
+
+function App() {
+    return (
+        <ThemeProvider>
+            <AppContent />
+        </ThemeProvider>
     );
 }
 

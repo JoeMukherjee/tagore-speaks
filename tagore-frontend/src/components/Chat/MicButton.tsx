@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { getSpeechRecognitionService } from "../../services/speechRecognition";
 import { MicButtonProps } from "../../types/chat";
+import { useTheme } from "../../theme/useTheme";
 
 const MicButton: React.FC<MicButtonProps> = ({
     onTranscriptionUpdate,
@@ -12,6 +13,7 @@ const MicButton: React.FC<MicButtonProps> = ({
 }) => {
     const speechService = getSpeechRecognitionService();
     const lastTextRef = useRef<string>("");
+    const { theme } = useTheme();
 
     useEffect(() => {
         speechService.setInactivityCallback(() => {
@@ -78,14 +80,15 @@ const MicButton: React.FC<MicButtonProps> = ({
         <button
             onClick={handleMicToggle}
             className={`p-2 mr-2 focus:outline-none transition-all duration-300 ease-in-out ${
-                isMicActive
-                    ? "text-red-500 hover:text-red-700"
-                    : "text-gray-500 hover:text-gray-700"
-            } ${
                 isDisabled || systemIsTyping || systemIsSpeaking
                     ? "opacity-50 pointer-events-none"
                     : "opacity-100 cursor-pointer"
             }`}
+            style={{
+                color: isMicActive
+                    ? theme.colors.micActive
+                    : theme.colors.micInactive,
+            }}
             aria-label={isMicActive ? "Stop recording" : "Start recording"}
             title={isMicActive ? "Stop recording" : "Start recording"}
             aria-disabled={isDisabled || systemIsTyping || systemIsSpeaking}

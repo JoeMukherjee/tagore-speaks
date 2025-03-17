@@ -15,6 +15,8 @@ export interface ChatMessageListProps {
     systemIsTyping: boolean;
     setSystemIsTyping: (isTyping: boolean) => void;
     forceComplete?: boolean;
+    onSendMessage: (message: string) => void;
+    scrollToBottom?: () => void;
 }
 
 export interface ChatResponse {
@@ -49,6 +51,8 @@ export interface AnimatedTextProps {
     systemIsTyping?: boolean;
     setSystemIsTyping?: (isTyping: boolean) => void;
     forceComplete?: boolean;
+    onSendMessage?: (message: string) => void;
+    scrollToBottom?: () => void;
 }
 
 export interface MicButtonProps {

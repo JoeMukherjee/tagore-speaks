@@ -1,6 +1,9 @@
 import React from "react";
+import { useTheme } from "../../theme/useTheme";
 
 const ExportPdfButton: React.FC = () => {
+    const { theme } = useTheme();
+
     const handleExport = () => {
         window.print();
     };
@@ -8,7 +11,8 @@ const ExportPdfButton: React.FC = () => {
     return (
         <button
             onClick={handleExport}
-            className="p-2 mr-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            className="p-2 mr-2 hover:opacity-80 focus:outline-none  print-hide"
+            style={{ color: theme.colors.text.muted }}
             title="Export chat as PDF"
         >
             <svg

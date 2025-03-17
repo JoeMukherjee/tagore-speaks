@@ -8,6 +8,8 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
     systemIsTyping,
     setSystemIsTyping,
     forceComplete,
+    onSendMessage,
+    scrollToBottom,
 }) => {
     return (
         <div className="flex flex-1 w-full">
@@ -35,6 +37,8 @@ const ChatMessageList: React.FC<ChatMessageListProps> = ({
                                         : undefined
                                 }
                                 forceComplete={forceComplete}
+                                onSendMessage={onSendMessage}
+                                scrollToBottom={scrollToBottom}
                             />
                         ))}
                     </div>

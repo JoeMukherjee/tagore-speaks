@@ -336,10 +336,20 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
             "content": f'\nYou can ask me to read any of these works by title, like "Please read {work_to_print}" or ask me for other works.\n',
             "speakable": True,
         }
+        yield {
+            "type": "chunk",
+            "content": f"Or try clicking on a link above.\n",
+            "speakable": True,
+        }
     else:
         yield {
             "type": "chunk",
             "content": f"\nYou can ask me to read any of these or other works by title.\n",
+            "speakable": True,
+        }
+        yield {
+            "type": "chunk",
+            "content": f"Or try clicking on a link above.\n",
             "speakable": True,
         }
 
