@@ -179,6 +179,10 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
                             isHoveredLink === match.index
                                 ? theme.colors.link.hover
                                 : theme.colors.link.DEFAULT,
+                        textDecoration:
+                            isHoveredLink === match.index
+                                ? theme.colors.link.hoverDecoration
+                                : theme.colors.link.decoration,
                     }}
                     onMouseEnter={() => setIsHoveredLink(matchIndex)}
                     onMouseLeave={() => setIsHoveredLink(null)}

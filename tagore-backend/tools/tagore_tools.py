@@ -47,6 +47,15 @@ GET_WORK_CONTENT_TOOL = {
                 "type": "string",
                 "description": "Title of the work to retrieve content for",
             },
+            "part_number": {
+                "type": ["integer", "null"],
+                "description": "Specific part number to retrieve (if not specified, defaults to first part unless whole_work is true)",
+            },
+            "whole_work": {
+                "type": "boolean",
+                "description": "Whether to retrieve the entire work with all parts. Set whole_work to true only if the user specifically requests for the whole content, otherwise set to false.",
+                "default": False,
+            },
             "fuzzy_match": {
                 "type": "boolean",
                 "description": "Whether to perform fuzzy matching on the title",
@@ -132,12 +141,16 @@ def get_work_content(params: Dict) -> Dict:
         params (dict): Parameters for retrieving the work
             - title (str): Title of the work to retrieve
             - fuzzy_match (bool): Whether to perform fuzzy matching on the title
+            - part_number (int, optional): Specific part number to retrieve
+            - whole_work (bool): Whether to retrieve the entire work with all parts
 
     Returns:
         dict: A structured response containing the work and its content
     """
     title = params.get("title")
     fuzzy_match = params.get("fuzzy_match", True)
+    part_number = params.get("part_number")
+    whole_work = params.get("whole_work", False)
 
     if not title:
         return {"error": "Title is required"}
@@ -187,7 +200,6 @@ def get_work_content(params: Dict) -> Dict:
         # Convert to dict
         work_dict = dict(work)
 
-        # Get all parts of the work
         cursor.execute(
             """
             SELECT part_number, content
@@ -198,11 +210,48 @@ def get_work_content(params: Dict) -> Dict:
             (work_dict["id"],),
         )
 
-        parts = []
+        all_parts = []
         for row in cursor.fetchall():
-            parts.append({"part_number": row["part_number"], "content": row["content"]})
+            all_parts.append(
+                {"part_number": row["part_number"], "content": row["content"]}
+            )
 
-        work_dict["parts"] = parts
+        # Handle the special cases for part selection
+        selected_parts = []
+
+        # Case 1: If title contains "Gitanjali" and no specific part is requested, return part 35
+        if "gitanjali" in title.lower() and not part_number and not whole_work:
+            for part in all_parts:
+                if part["part_number"] == 35:
+                    selected_parts = [part]
+                    break
+            # If part 35 was not found, fall back to the first part or all parts
+            if not selected_parts and all_parts:
+                selected_parts = [all_parts[0]]
+
+        # Case 2: If a specific part number is requested
+        elif part_number is not None:
+            for part in all_parts:
+                if part["part_number"] == part_number:
+                    selected_parts = [part]
+                    break
+            # If requested part was not found, indicate this in the response
+            if not selected_parts:
+                return {
+                    "found": True,
+                    "work": work_dict,
+                    "message": f"Part {part_number} not found for '{title}'",
+                }
+
+        # Case 3: Return all parts if whole_work is True
+        elif whole_work:
+            selected_parts = all_parts
+
+        # Case 4: Default behavior - return only the first part
+        elif all_parts:
+            selected_parts = [all_parts[0]]
+
+        work_dict["parts"] = selected_parts
 
         conn.close()
 
@@ -295,7 +344,7 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
                     yield {
                         "type": "chunk",
                         "content": f'{i}. "{title}" ',
-                        "speakable": True,
+                        "speakable": False,
                     }
                     yield {
                         "type": "chunk",
@@ -312,8 +361,8 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
 
                     yield {
                         "type": "chunk",
-                        "content": f'{i}. "{title}"\n',
-                        "speakable": True,
+                        "content": f'{i}. "{title}."\n',
+                        "speakable": False,
                     }
 
             # yield {
@@ -325,7 +374,7 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
     elif "error" in tool_response:
         yield {
             "type": "chunk",
-            "content": f"Sorry, I encountered an error while retrieving the works: {tool_response['error']}\n",
+            "content": f"Sorry, I encountered an error while retrieving the works: {tool_response['error']}.\n",
             "speakable": False,
         }
 
@@ -385,7 +434,7 @@ def format_work_content_response(tool_response: Dict) -> List[Dict]:  # type: ig
             suggestion_text = ", ".join(f'"{s}"' for s in suggestions)
             yield {
                 "type": "chunk",
-                "content": f"You might be looking for: {suggestion_text}\n",
+                "content": f"You might be looking for: {suggestion_text}?\n",
                 "speakable": True,
             }
         return
@@ -398,7 +447,7 @@ def format_work_content_response(tool_response: Dict) -> List[Dict]:  # type: ig
     yield {
         "type": "chunk",
         "content": f"\n\n# {title}\n\n",
-        "speakable": True,
+        "speakable": False,
     }
 
     parts = work.get("parts", [])
@@ -411,7 +460,7 @@ def format_work_content_response(tool_response: Dict) -> List[Dict]:  # type: ig
             yield {
                 "type": "chunk",
                 "content": f"## Part {part_number}\n\n{content}\n\n",
-                "speakable": True,
+                "speakable": False,
             }
     else:
         # Single-part work

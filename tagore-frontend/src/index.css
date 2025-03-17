@@ -84,14 +84,8 @@ html {
         --theme-text-default: #f0ead6;
     }
 
-    /* Animation that can't easily be done with Tailwind */
-    @keyframes logo-spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
+    .link-styled {
+        text-decoration: underline;
     }
 }
 

@@ -79,9 +79,13 @@ class ResponseService:
                     if result["type"] == "chunk":
                         full_response += result["content"]
                         speakable_status = result.get("speakable", False)
-                        speakable_chunks.append(
-                            {"text": result["content"], "speakable": speakable_status}
-                        )
+                        if speakable_status:
+                            speakable_chunks.append(
+                                {
+                                    "text": result["content"],
+                                    "speakable": speakable_status,
+                                }
+                            )
 
                 history_response += f"\n\n[Note: Used tool '{content_block.name}' to retrieve information]"
 
@@ -101,6 +105,9 @@ class ResponseService:
             if len(history_response) > 200
             else f"Assistant (history): {history_response}"
         )
+
+        print(f"full_response: {full_response}")
+        print(f"speakable_chunks: {speakable_chunks}")
 
         return full_response, speakable_chunks
 

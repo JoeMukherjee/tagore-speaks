@@ -142,15 +142,36 @@ const ChatContainer: React.FC = () => {
                     setSystemIsSpeaking(true);
                     lastSpokenMessageIndexRef.current = currentIndex;
 
-                    speechSynthesisService
-                        .speakWithWebPlayer(lastMessage.content, () => {
-                            console.log("Speech completed naturally");
+                    if (
+                        lastMessage.speakableChunks &&
+                        lastMessage.speakableChunks.length > 0
+                    ) {
+                        const speakableText = lastMessage.speakableChunks
+                            .filter((chunk) => chunk.speakable)
+                            .map((chunk) => chunk.text)
+                            .join(" ");
+
+                        if (speakableText) {
+                            speechSynthesisService
+                                .speakWithWebPlayer(speakableText, () => {
+                                    console.log("Speech completed naturally");
+                                    setSystemIsSpeaking(false);
+                                })
+                                .catch((error) => {
+                                    console.error(
+                                        "Speech synthesis error:",
+                                        error
+                                    );
+                                    setSystemIsSpeaking(false);
+                                });
+                        } else {
+                            console.log("No speakable content found");
                             setSystemIsSpeaking(false);
-                        })
-                        .catch((error) => {
-                            console.error("Speech synthesis error:", error);
-                            setSystemIsSpeaking(false);
-                        });
+                        }
+                    } else {
+                        console.log("No speakable content found");
+                        setSystemIsSpeaking(false);
+                    }
                 }
             }
         }

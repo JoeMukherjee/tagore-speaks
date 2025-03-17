@@ -33,6 +33,8 @@ export interface ThemeColors {
     link: {
         DEFAULT: string;
         hover: string;
+        decoration: string;
+        hoverDecoration: string;
     };
 }
 
@@ -75,6 +77,8 @@ export const lightTheme: Theme = {
         link: {
             DEFAULT: "#7D2929", // Medium maroon for links
             hover: "#541C1C", // Deeper maroon for hover
+            decoration: "underline",
+            hoverDecoration: "none",
         },
     },
 };
@@ -113,6 +117,8 @@ export const darkTheme: Theme = {
         link: {
             DEFAULT: "#C9AB63", // Gold for links
             hover: "#F0EAD6", // Aged paper color for hover
+            decoration: "underline",
+            hoverDecoration: "none",
         },
     },
 };
