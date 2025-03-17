@@ -154,7 +154,16 @@ const AudioVisualization: React.FC<AudioVisualizationProps> = ({
     };
 
     return (
-        <div className="w-full mx-auto  overflow-hidden">
+        <div
+            className="w-full mx-auto overflow-hidden"
+            style={{
+                position: "absolute",
+                bottom: "50%", // Position it just above the container
+                left: 0,
+                right: 0,
+                zIndex: 10, // Ensure it's above other elements
+            }}
+        >
             <svg
                 ref={svgRef}
                 className="w-full"

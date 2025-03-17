@@ -10,7 +10,7 @@ const Header: React.FC = () => {
 
     return (
         <header
-            className="h-20 fixed pt-2 top-0 left-0 right-0 z-10 flex items-center px-4"
+            className="h-24 fixed pb-2 top-0 left-0 right-0 z-10 flex items-center px-4"
             style={{ backgroundColor: theme.colors.background.DEFAULT }}
         >
             {/* Left side - Export button */}

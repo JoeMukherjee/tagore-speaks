@@ -64,7 +64,7 @@ export class SpeechRecognitionService {
     private interimTranscript: string = "";
 
     private inactivityTimeout: ReturnType<typeof setTimeout> | null = null;
-    private inactivityDelay: number = 3000;
+    private inactivityDelay: number = 1000;
     private inactivityCallback: (() => void) | null = null;
 
     constructor() {

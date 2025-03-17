@@ -251,9 +251,11 @@ const ChatContainer: React.FC = () => {
                             <path d="M12 5v14M5 12l7 7 7-7"></path>
                         </svg>
                     </button>
-                    <AudioVisualization
-                        isVisible={isMicActive && systemIsSpeaking}
-                    />
+                    <div style={{ position: "relative", height: "10px" }}>
+                        <AudioVisualization
+                            isVisible={isMicActive && systemIsSpeaking}
+                        />
+                    </div>
                     <div
                         className={`w-full rounded-lg pt-2 mt-2 mb-4 transition-all duration-300`}
                         style={{

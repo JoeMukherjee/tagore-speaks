@@ -387,7 +387,7 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
         }
         yield {
             "type": "chunk",
-            "content": f"Or try clicking on a link above.\n",
+            "content": f"Or try clicking on these.\n",
             "speakable": True,
         }
     else:
@@ -398,7 +398,7 @@ def format_works_response(tool_response: Dict) -> List[Dict]:  # type: ignore
         }
         yield {
             "type": "chunk",
-            "content": f"Or try clicking on a link above.\n",
+            "content": f"Or try clicking on these.\n",
             "speakable": True,
         }
 
