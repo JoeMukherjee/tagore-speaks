@@ -45,36 +45,36 @@ export const lightTheme: Theme = {
     isDark: false,
     colors: {
         primary: {
-            DEFAULT: "#213547",
-            hover: "#6b7280",
+            DEFAULT: "#541C1C", // Deeper maroon for primary text
+            hover: "#7D2929", // Lighter maroon for hover states
         },
         background: {
-            DEFAULT: "#ffffff",
+            DEFAULT: "#F8F3E6", // Softer aged paper background
         },
         text: {
-            DEFAULT: "#213547",
-            muted: "#6b7280",
+            DEFAULT: "#541C1C", // Deeper maroon for text consistency
+            muted: "#8A5050", // Muted maroon for secondary text
         },
         input: {
-            background: "#f3f4f6",
-            border: "#e5e7eb",
+            background: "#F0EAD6", // Slightly darker aged paper for inputs
+            border: "#C9AB63", // Softer gold for borders
         },
         chat: {
-            user: "#f3f4f6",
-            system: "transparent",
+            user: "#EADEC8", // Slightly darker than background for user messages
+            system: "transparent", // Keeping system messages transparent
         },
         button: {
-            DEFAULT: "#f9f9f9",
+            DEFAULT: "#F0EAD6", // Matching input background
         },
-        accent: "#3b82f6",
-        stopButton: "#f87171",
-        micActive: "#ef4444",
-        micInactive: "#6b7280",
-        border: "#e5e7eb",
-        shadow: "rgba(209, 213, 219, 0.8)",
+        accent: "#9D2932", // Rich Bengali red/maroon (slightly brighter than primary)
+        stopButton: "#9D2932", // Matching accent
+        micActive: "#9D2932", // Matching accent
+        micInactive: "#8A5050", // Matching muted text
+        border: "#C9AB63", // Softer gold for borders
+        shadow: "rgba(201, 171, 99, 0.3)", // Gold shadow with transparency
         link: {
-            DEFAULT: "#2563eb",
-            hover: "#1d4ed8",
+            DEFAULT: "#7D2929", // Medium maroon for links
+            hover: "#541C1C", // Deeper maroon for hover
         },
     },
 };
@@ -83,36 +83,36 @@ export const darkTheme: Theme = {
     isDark: true,
     colors: {
         primary: {
-            DEFAULT: "#213547",
-            hover: "#6b7280",
+            DEFAULT: "#F0EAD6", // Aged paper color for primary text
+            hover: "#C9AB63", // Gold for hover states
         },
         background: {
-            DEFAULT: "#242424",
+            DEFAULT: "#2A1215", // Very dark maroon background
         },
         text: {
-            DEFAULT: "rgba(255, 255, 255, 0.87)",
-            muted: "#9ca3af",
+            DEFAULT: "#F0EAD6", // Aged paper color for text
+            muted: "#C7BEA2", // Muted version of the text color
         },
         input: {
-            background: "#1a1a1a",
-            border: "#4b5563",
+            background: "#3D1A1F", // Slightly lighter than main background
+            border: "#C9AB63", // Gold for input borders
         },
         chat: {
-            user: "#1a1a1a",
-            system: "transparent",
+            user: "#3D1A1F", // Slightly lighter than background for user messages
+            system: "transparent", // Keeping system messages transparent
         },
         button: {
-            DEFAULT: "#1a1a1a",
+            DEFAULT: "#3D1A1F", // Matching input background
         },
-        accent: "#60a5fa",
-        stopButton: "#f87171",
-        micActive: "#ef4444",
-        micInactive: "#9ca3af",
-        border: "#4b5563",
-        shadow: "rgba(17, 24, 39, 0.8)",
+        accent: "#B13A41", // Brighter maroon/red for accent elements
+        stopButton: "#B13A41", // Matching accent
+        micActive: "#B13A41", // Matching accent
+        micInactive: "#C7BEA2", // Matching muted text
+        border: "#C9AB63", // Gold for borders
+        shadow: "rgba(201, 171, 99, 0.2)", // Gold shadow with more transparency
         link: {
-            DEFAULT: "#93c5fd",
-            hover: "#bfdbfe",
+            DEFAULT: "#C9AB63", // Gold for links
+            hover: "#F0EAD6", // Aged paper color for hover
         },
     },
 };

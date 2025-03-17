@@ -70,10 +70,18 @@ html {
         --shadow: rgba(209, 213, 219, 0.8);
         --linkColor: #2563eb;
         --linkHoverColor: #1d4ed8;
+
+        --theme-bg-default: #f8f3e6;
+        --theme-chat-user: #eadec8;
+        --theme-text-default: #541c1c;
     }
 
     .dark {
         color-scheme: dark;
+
+        --theme-bg-default: #2a1215;
+        --theme-chat-user: #3d1a1f;
+        --theme-text-default: #f0ead6;
     }
 
     /* Animation that can't easily be done with Tailwind */
@@ -138,6 +146,10 @@ html {
         padding: 0;
         height: auto;
         overflow: visible;
+        background-color: var(
+            --theme-bg-default
+        ) !important; /* Use theme background */
+        color: var(--theme-text-default) !important; /* Use theme text color */
     }
 
     /* Force header to top of first page */
@@ -190,9 +202,5 @@ html {
     .print-hide {
         display: none !important;
         visibility: hidden !important;
-    }
-
-    [style*="background-color"] {
-        background-color: transparent !important;
     }
 }
