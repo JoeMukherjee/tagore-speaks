@@ -62,7 +62,7 @@ export const lightTheme: Theme = {
             border: "#C9AB63", // Softer gold for borders
         },
         chat: {
-            user: "#EADEC8", // Slightly darker than background for user messages
+            user: "#F0EAD6", // Slightly darker than background for user messages
             system: "transparent", // Keeping system messages transparent
         },
         button: {
