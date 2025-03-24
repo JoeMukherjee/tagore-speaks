@@ -105,24 +105,24 @@
     npm install
 
     # [Optional] Create a .env file for frontend configuration
-    echo "VITE_API_URL=http://localhost:5000" > .env #Optional
+    echo "VITE_API_URL=http://localhost:5000" > .env # Optional
     ```
 
 4. **Run the application**
 
-    In one terminal (backend):
+    In the first terminal (frontend):
+
+    ```bash
+    cd tagore-frontend
+    npm run dev
+    ```
+
+    In another terminal (backend):
 
     ```bash
     cd tagore-backend
     conda activate tagore
     python app.py
-    ```
-
-    In another terminal (frontend):
-
-    ```bash
-    cd tagore-frontend
-    npm run dev
     ```
 
 5. **Access the application**
@@ -147,19 +147,20 @@
 
 ```
 tagore-speaks/
-├── tagore-frontend/           # React.js frontend application
+├── tagore-frontend/                    # React.js frontend application
 │   ├── src/
-│   │   ├── components/        # UI components
-│   │   ├── services/          # API and service integrations
-│   │   └── theme/             # Theming and styling
+│   │   ├── components/                 # UI components
+│   │   ├── services/                   # API and service integrations
+│   │   └── theme/                      # Theming and styling
 │   └── ...
-├── tagore-backend/            # Python Flask backend
-│   ├── routes/                # API endpoints
-│   ├── services/              # Business logic
-│   ├── tools/                 # Custom LLM tools
+├── tagore-backend/                     # Python Flask backend
+│   ├── routes/                         # API endpoints
+│   ├── services/                       # Business logic
+│   ├── tools/                          # Custom LLM tools
 │   └── ...
-└── tagore-data/               # Data management
-    ├── tagore-data/           # SQLite databases
+└── tagore-data/                        # Data management
+    ├── tagore-data/                    # SQLite Tagore Creations database
+    ├── tagore_speaks_conversations.db  # SQLite chat database
     └── ...
 ```
 
