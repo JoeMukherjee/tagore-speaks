@@ -132,6 +132,8 @@
 
 ## 📖 How It Works
 
+### Core System Architecture
+
 1. **Conversation Flow**: User queries are processed by the Anthropic Claude model, personalized with a carefully crafted system prompt that embodies Tagore's personality and wisdom. The system prompt guides the AI to respond as Tagore would, with his philosophical outlook, humility, and poetic sensibilities.
 
 2. **Literary Database**: Tagore's works are categorized and stored in a SQLite database, organized into:
@@ -155,7 +157,7 @@ Each work can contain multiple parts or chapters, enabling granular access to sp
     - Tool calls and their responses
     - Timestamps for chronological ordering
 
-## 📖 Custom LLM Tools System
+### Custom LLM Tools System
 
 The application leverages Claude's function calling capabilities through two specialized tools:
 
@@ -183,7 +185,7 @@ The application leverages Claude's function calling capabilities through two spe
     - Responses are formatted with special formatting for works lists and content
     - System tracks which parts are "speakable" for voice synthesis
 
-## 📖 Interactive Content Exploration
+### Interactive Content Exploration
 
 The UI facilitates natural exploration of Tagore's works through:
 
