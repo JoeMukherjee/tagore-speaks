@@ -165,19 +165,19 @@ The application leverages Claude's function calling capabilities through two spe
 
     - Lists Tagore's creative works by category
     - Parameters:
-    -   - category: Filter by poem, short-stories, essay, non-fiction, or all
-    -   - random: Return random selection instead of all works
-    -   - limit: Maximum number of works to return
+        - category: Filter by poem, short-stories, essay, non-fiction, or all
+        - random: Return random selection instead of all works
+        - limit: Maximum number of works to return
     - Example query: "Can you list some of your poems?"
 
 2. **Get Work Content Tool (get_work_content)**:
 
     - Retrieves the content of a specific work
     - Parameters:
-    -   - title: Title of the work to retrieve
-    -   - part_number: Specific chapter/section (optional)
-    -   - whole_work: Whether to retrieve all parts
-    -   - fuzzy_match: Enable approximate title matching
+        - title: Title of the work to retrieve
+        - part_number: Specific chapter/section (optional)
+        - whole_work: Whether to retrieve all parts
+        - fuzzy_match: Enable approximate title matching
     - Example query: "Read me your poem 'The Golden Boat'"
 
 3. **Response Processing**:
