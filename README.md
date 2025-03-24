@@ -231,7 +231,7 @@ tagore-speaks/
 
 ## 🤝 Contributing
 
-We welcome contributions to this project! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+I welcome contributions to this project! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
 
 ## 📜 License
 
