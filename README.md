@@ -64,7 +64,7 @@
 
 ### Prerequisites
 
--   Node.js (v16+)
+-   Node.js (v20+)
 -   Python (v3.10+)
 -   Conda package manager
 -   API keys for Anthropic and Cartesia (for voice generation)
