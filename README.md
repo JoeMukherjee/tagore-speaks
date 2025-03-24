@@ -59,6 +59,7 @@
 -   SQLite3 for storing Tagore's literary works
 -   Categorized repository (poems, essays, short stories, non-fiction)
 -   Conversation storage system
+    How It Works
 
 ## 🚀 Getting Started
 
@@ -131,17 +132,79 @@
 
 ## 📖 How It Works
 
-1. **Conversation Flow**: User queries are processed by the Anthropic Claude model, personalized with a carefully crafted system prompt that embodies Tagore's personality and wisdom.
+1. **Conversation Flow**: User queries are processed by the Anthropic Claude model, personalized with a carefully crafted system prompt that embodies Tagore's personality and wisdom. The system prompt guides the AI to respond as Tagore would, with his philosophical outlook, humility, and poetic sensibilities.
 
-2. **Literary Database**: Tagore's works are categorized and stored in a SQLite database, which the AI can reference using custom-built tools.
+2. **Literary Database**: Tagore's works are categorized and stored in a SQLite database, organized into:
+
+    - Poems (including collections like Gitanjali)
+    - Short stories
+    - Essays
+    - Non-fiction works
+
+Each work can contain multiple parts or chapters, enabling granular access to specific sections.
 
 3. **Voice Interaction**:
 
-    - Speech recognition captures user's spoken queries
+    - Speech recognition captures user's spoken queries via Web Speech API
     - Tagore's responses are generated as text by the AI
     - Cartesia's text-to-speech API converts responses to speech using a voice model trained on Tagore's actual recordings
+    - Audio visualization provides visual feedback during speech playback
 
-4. **Persistent Memory**: Conversations are stored with unique IDs, allowing users to continue previous discussions.
+4. **Persistent Memory**: Conversations are stored with unique IDs in a separate SQLite database, allowing users to continue previous discussions. Each conversation contains:
+    - User and assistant messages
+    - Tool calls and their responses
+    - Timestamps for chronological ordering
+
+## 📖 Custom LLM Tools System
+
+The application leverages Claude's function calling capabilities through two specialized tools:
+
+1. **List Works Tool (list_works)**:
+
+    - Lists Tagore's creative works by category
+    - Parameters:
+    -   - category: Filter by poem, short-stories, essay, non-fiction, or all
+    -   - random: Return random selection instead of all works
+    -   - limit: Maximum number of works to return
+    - Example query: "Can you list some of your poems?"
+
+2. **Get Work Content Tool (get_work_content)**:
+
+    - Retrieves the content of a specific work
+    - Parameters:
+    -   - title: Title of the work to retrieve
+    -   - part_number: Specific chapter/section (optional)
+    -   - whole_work: Whether to retrieve all parts
+    -   - fuzzy_match: Enable approximate title matching
+    - Example query: "Read me your poem 'The Golden Boat'"
+
+3. **Response Processing**:
+    - The backend processes AI responses and tool outputs into structured data
+    - Responses are formatted with special formatting for works lists and content
+    - System tracks which parts are "speakable" for voice synthesis
+
+## 📖 Interactive Content Exploration
+
+The UI facilitates natural exploration of Tagore's works through:
+
+1. **Interactive Lists**: When users ask about Tagore's works, the response includes clickable links for each work. This allows users to:
+    - Browse collections of works by category
+    - Click on any title to automatically request its content
+    - Example: "What poems did you write?" produces a list where each title is a clickable element
+2. **Content Navigation**:
+
+    - For multi-part works, the system provides navigation options
+    - Users can request specific sections or the entire work
+    - Example: "Show me part 35 of Gitanjali" or "Read me all of Gitanjali"
+
+3. **Format-Aware Display**:
+    - Poetry is displayed with appropriate line breaks and stanzas
+    - Prose works maintain paragraph structure
+    - Special formatting for dialogues and quotes
+4. **Context-Aware Responses**:
+    - The AI can reference and discuss specific works in natural conversation
+    - The persona can provide background about when and why works were written
+    - Critical interpretations and historical context enrich the experience
 
 ## 🧩 Project Structure
 
