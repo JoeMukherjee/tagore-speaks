@@ -89,6 +89,7 @@
 
     # Create a .env file with your API keys
     echo "ANTHROPIC_API_KEY=your_anthropic_key" > .env
+    echo "CARTESIA_API_KEY=your_cartesia_key" > .env
     ```
 
     > 📝 Note: If `environment.yml` is not available in the repository, you'll need to create it first using:
