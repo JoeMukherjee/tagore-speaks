@@ -104,8 +104,8 @@
     cd ../tagore-frontend
     npm install
 
-    # Create a .env file for frontend configuration
-    echo "VITE_API_URL=http://localhost:5000" > .env
+    # [Optional] Create a .env file for frontend configuration
+    echo "VITE_API_URL=http://localhost:5000" > .env #Optional
     ```
 
 4. **Run the application**
