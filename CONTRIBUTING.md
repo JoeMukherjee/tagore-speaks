@@ -24,7 +24,7 @@ There are many ways you can contribute to Tagore Speaks:
     git clone https://github.com/your-username/tagore-speaks.git
     cd tagore-speaks
     ```
-3. **Set up the project** by following the installation instructions in the README.md
+3. **Set up the project** by following the installation instructions in the README.md, making sure to use the Conda environment
 4. **Create a new branch** for your contribution
     ```bash
     git checkout -b feature/your-feature-name
@@ -133,6 +133,37 @@ We use GitHub Actions for continuous integration. Your PR will be automatically 
 1. All tests pass
 2. No linting errors are present
 3. The application builds successfully
+
+## 📦 Managing Dependencies
+
+We use Conda for managing Python dependencies. When adding new dependencies:
+
+1. **Add the dependency to your local environment**:
+
+    ```bash
+    conda activate tagore
+    conda install package-name
+    ```
+
+2. **Update the environment file**:
+
+    ```bash
+    conda env export > environment.yml
+    ```
+
+3. **Clean up the environment file** by removing platform-specific packages and adjusting version requirements as needed
+
+4. **Test the environment creation** on a different machine if possible to ensure reproducibility:
+    ```bash
+    conda env create -f environment.yml
+    ```
+
+For frontend dependencies, continue using npm:
+
+```bash
+cd tagore-frontend
+npm install package-name
+```
 
 ## 📝 License
 

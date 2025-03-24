@@ -5,6 +5,23 @@
   <h3>Have a conversation with Rabindranath Tagore</h3>
 </div>
 
+## 📑 Table of Contents
+
+-   [Overview](#-overview)
+-   [Features](#-features)
+-   [Technology Stack](#️-technology-stack)
+    -   [Frontend](#frontend)
+    -   [Backend](#backend)
+    -   [Database](#database)
+-   [Getting Started](#-getting-started)
+    -   [Prerequisites](#prerequisites)
+    -   [Installation](#installation)
+-   [How It Works](#-how-it-works)
+-   [Project Structure](#-project-structure)
+-   [Contributing](#-contributing)
+-   [License](#-license)
+-   [Acknowledgements](#-acknowledgements)
+
 ## 🌟 Overview
 
 "Tagore Speaks" is an interactive AI application that lets you engage in meaningful conversations with Rabindranath Tagore, one of history's most profound thinkers and poets. Ask questions, seek wisdom, or explore his vast literary works - all through a natural conversational interface.
@@ -47,8 +64,9 @@
 
 ### Prerequisites
 
--   Node.js (v20+)
+-   Node.js (v16+)
 -   Python (v3.10+)
+-   Conda package manager
 -   API keys for Anthropic and Cartesia (for voice generation)
 
 ### Installation
@@ -60,17 +78,24 @@
     cd tagore-speaks
     ```
 
-2. **Set up the backend**
+2. **Set up the backend with Conda**
 
     ```bash
     cd tagore-backend
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    pip install -r requirements.txt
+
+    # Create and activate Conda environment
+    conda env create -f environment.yml
+    conda activate tagore
 
     # Create a .env file with your API keys
     echo "ANTHROPIC_API_KEY=your_anthropic_key" > .env
     ```
+
+    > 📝 Note: If `environment.yml` is not available in the repository, you'll need to create it first using:
+    >
+    > ```bash
+    > conda env export > environment.yml
+    > ```
 
 3. **Set up the frontend**
 
@@ -88,7 +113,7 @@
 
     ```bash
     cd tagore-backend
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    conda activate tagore
     python app.py
     ```
 
@@ -155,6 +180,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p>Created with 💖 for lovers of literature, philosophy, and meaningful conversation by <a href="https://www.aurora.aero/" target="_blank">
+  <p>Created with 💖 for lovers of literature, philosophy, and meaningful conversation by <a href="https://abhiagni.com" target="_blank">
                         abhiagni.com</a></p>
 </div>

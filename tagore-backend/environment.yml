@@ -1,0 +1,17 @@
+name: tagore
+channels:
+    - defaults
+    - conda-forge
+dependencies:
+    - python=3.10
+    - flask=3.1.0
+    - flask-cors=3.0.10
+    - pip=25.0
+    - sqlite=3.45.3
+    - pip:
+          - anthropic==0.49.0
+          - python-dotenv==1.0.1
+          - requests==2.32.3
+          - pandas==2.2.3
+          - pydantic==2.10.6
+          - uvicorn==0.34.0
