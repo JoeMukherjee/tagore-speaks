@@ -26,7 +26,9 @@
 
 "Tagore Speaks" is an interactive AI application that lets you engage in meaningful conversations with Rabindranath Tagore, one of history's most profound thinkers and poets. Ask questions, seek wisdom, or explore his vast literary works - all through a natural conversational interface.
 
-![Tagore Speaks Interface](./tagore-frontend/public/tagore-speaks.gif)
+<div align="center">
+  <img src="./tagore-frontend/public/tagore-speaks.gif" width="90%" alt="Tagore Speaks Interface">
+</div>
 
 ## ✨ Features
 
