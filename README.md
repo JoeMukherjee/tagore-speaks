@@ -38,7 +38,9 @@
 -   **Export Conversations**: Save your meaningful exchanges as PDF documents
 -   **Conversation Memory**: Continue previous conversations where you left off
 
-![Tagore Speaks background dark/light mode with print](./tagore-frontend/public/background-transition.gif)
+<div align="center">
+  <img src="./tagore-frontend/public/background-transition.gif" width="50%" alt="Tagore Speaks background dark/light mode with print">
+</div>
 
 ## 🛠️ Technology Stack
 
@@ -172,7 +174,9 @@ The application leverages Claude's function calling capabilities through two spe
         - limit: Maximum number of works to return
     - Example query: "Can you list some of your poems?"
 
-![Tagore Speaks listing all works](./tagore-frontend/public/listing-works.gif)
+<div align="center">
+  <img src="./tagore-frontend/public/listing-works.gif" width="50%" alt="Tagore Speaks listing all works">
+</div>
 
 2. **Get Work Content Tool (get_work_content)**:
 
