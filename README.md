@@ -26,7 +26,7 @@
 
 "Tagore Speaks" is an interactive AI application that lets you engage in meaningful conversations with Rabindranath Tagore, one of history's most profound thinkers and poets. Ask questions, seek wisdom, or explore his vast literary works - all through a natural conversational interface.
 
-![Tagore Speaks Interface](./tagore-frontend/src/assets/transcript-example1.png)
+![Tagore Speaks Interface](./tagore-frontend/public/tagore-speaks.gif)
 
 ## ✨ Features
 
@@ -37,6 +37,8 @@
 -   **Dark/Light Mode**: Comfortable viewing experience in any lighting environment
 -   **Export Conversations**: Save your meaningful exchanges as PDF documents
 -   **Conversation Memory**: Continue previous conversations where you left off
+
+![Tagore Speaks background dark/light mode with print](./tagore-frontend/public/background-transition.gif)
 
 ## 🛠️ Technology Stack
 
@@ -169,6 +171,8 @@ The application leverages Claude's function calling capabilities through two spe
         - random: Return random selection instead of all works
         - limit: Maximum number of works to return
     - Example query: "Can you list some of your poems?"
+
+![Tagore Speaks listing all works](./tagore-frontend/public/listing-works.gif)
 
 2. **Get Work Content Tool (get_work_content)**:
 
