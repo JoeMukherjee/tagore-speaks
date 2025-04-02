@@ -478,6 +478,96 @@ tagore-data/
    - Record sales and purchases
    - Manage item details and categories
 
+5. **Voice Response Mode**:
+   - Text-to-speech conversion of Tagore's responses
+   - Speakable content segmentation for natural pauses
+   - Poetry reading with appropriate cadence and pacing
+   - Integration with Cartesia API for high-quality voice synthesis
+   - Ability to toggle voice mode on/off in the interface
+   - Support for adjusting voice speed and pitch
+
+### Voice Response System
+
+The voice response system enhances the conversational experience by allowing Tagore's words to be spoken aloud, creating a more immersive interaction.
+
+#### Architecture
+
+```
+┌───────────────┐     ┌───────────────┐     ┌───────────────┐     ┌───────────────┐
+│               │     │               │     │               │     │               │
+│    Backend    │────►│ Response with │────►│  Frontend     │────►│   Cartesia    │
+│   Processing  │     │ speakableChunks│     │  Voice.js    │     │    API        │
+│               │     │               │     │               │     │               │
+└───────────────┘     └───────────────┘     └───────────────┘     └───────────────┘
+```
+
+#### Implementation Details
+
+1. **Backend Processing**:
+   - In `response_service.py`, responses are processed to identify speakable content
+   - Content blocks are marked with speakable attributes based on content type
+   - Poetry and prose are segmented differently for natural reading rhythm
+   ```python
+   speakable_chunks.append({
+       "text": text_content,
+       "speakable": True
+   })
+   ```
+
+2. **Response Structure**:
+   - The backend API returns speakable chunks alongside the text response
+   ```json
+   {
+     "response": "Complete response text...",
+     "conversationId": "conversation-uuid",
+     "speakableChunks": [
+       {
+         "text": "First speakable segment",
+         "speakable": true
+       },
+       {
+         "text": "Second speakable segment",
+         "speakable": true
+       }
+     ]
+   }
+   ```
+
+3. **Frontend Voice Processing**:
+   - `src/services/voice.js` handles the text-to-speech functionality
+   - Uses Cartesia API for high-quality Bengali-accented English voice synthesis
+   - Voice parameters are configurable (pitch, speed, accent intensity)
+
+4. **Voice Authentication**:
+   - Endpoint at `/api/cartesia-auth` provides API keys for voice service
+   - Authentication tokens are managed securely client-side
+
+5. **User Controls**:
+   - Toggle button in UI to enable/disable voice response
+   - Volume control and mute functionality
+   - Option to interrupt ongoing speech when sending new messages
+
+#### Voice Processing Workflow
+
+1. When a response is received from the backend, the frontend checks if voice mode is enabled
+2. If enabled, the `voice.js` module iterates through the speakable chunks
+3. Each chunk is sent to the Cartesia API with the appropriate voice parameters
+4. Audio is played sequentially with natural pauses between chunks
+5. During poetry recitation, special timing parameters are applied for rhythmic reading
+
+#### Voice Settings
+
+The voice settings can be adjusted in the frontend settings panel:
+
+| Setting          | Default | Range       | Description                                  |
+|------------------|---------|-------------|----------------------------------------------|
+| Voice Enabled    | True    | True/False  | Master toggle for voice response             |
+| Volume           | 80%     | 0-100%      | Voice output volume                          |
+| Speed            | 1.0     | 0.5-2.0     | Speech rate multiplier                       |
+| Pitch            | 1.0     | 0.8-1.2     | Voice pitch adjustment                       |
+| Bengali Accent   | Medium  | None-Strong | Level of Bengali accent in English speech    |
+| Auto-mute        | False   | True/False  | Automatically mute when typing new message   |
+
 ## Tool-Based Interactions
 
 The system uses custom tools to enhance Claude's capabilities:
