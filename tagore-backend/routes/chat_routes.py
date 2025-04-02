@@ -38,9 +38,12 @@ def chat_message():
                 "speakableChunks": speakable_chunks,
             }
         )
+    except ValueError as ve:
+        logger.error(f"Validation error in chat_message: {str(ve)}")
+        return jsonify({"error": str(ve), "conversationId": conversation_id}), 400
     except Exception as e:
-        logger.info(f"Error in chat_message: {str(e)}")
-        return jsonify({"error": str(e), "conversationId": conversation_id}), 500
+        logger.error(f"Error in chat_message: {str(e)}")
+        return jsonify({"error": "An unexpected error occurred. Please try again later.", "conversationId": conversation_id}), 500
 
 
 @chat_bp.route("/api/cartesia-auth", methods=["GET"])
