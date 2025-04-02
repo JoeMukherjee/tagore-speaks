@@ -46,7 +46,7 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 # model: claude-3-5-sonnet-20241022| pricing: $3.00 / $15.00 | cutoff: Apr 2024
 # model: claude-3-7-sonnet-20250219| pricing: $3.00 / $15.00 | cutoff: Nov 2024
 
-ANTHROPIC_MODEL = "claude-3-7-sonnet-20250219"
+ANTHROPIC_MODEL = "claude-3-5-sonnet-latest"
 MAX_TOKENS = 1000
 
 # Get dynamic context information
